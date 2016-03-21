@@ -1,5 +1,5 @@
 # #%L
-# OME Files C++ libraries (cmake build infrastructure)
+# OME QtWidgets libraries (cmake build infrastructure)
 # %%
 # Copyright © 2006 - 2015 Open Microscopy Environment:
 #   - Massachusetts Institute of Technology
@@ -39,4 +39,3 @@ set(OME_LIBEXEC_INCLUDES
     ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(view)
-add_subdirectory(info)

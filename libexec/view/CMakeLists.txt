@@ -1,5 +1,5 @@
 # #%L
-# OME Files C++ libraries (cmake build infrastructure)
+# OME QtWidgets libraries (cmake build infrastructure)
 # %%
 # Copyright © 2006 - 2015 Open Microscopy Environment:
 #   - Massachusetts Institute of Technology
@@ -67,7 +67,7 @@ if (OME_QTOPENGL)
 
 
   install(TARGETS view RUNTIME
-          DESTINATION ${OME_FILES_INSTALL_PKGLIBEXECDIR}
+          DESTINATION ${OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR}
           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
                       GROUP_READ GROUP_EXECUTE
                       WORLD_READ WORLD_EXECUTE)

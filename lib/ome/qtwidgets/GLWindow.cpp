@@ -158,7 +158,7 @@ namespace ome
       bool needsInitialize = false;
       bool enableDebug = false;
 
-      if (std::getenv("OME_FILES_OPENGL_DEBUG"))
+      if (std::getenv("OME_QTWIDGETS_OPENGL_DEBUG"))
         enableDebug = true;
 
       if (!glcontext) {

@@ -34,58 +34,28 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-include(CheckCXXSourceRuns)
+if(BUILD_DOXYGEN)
+  set(OME_COMMON_TAGFILE "${CMAKE_INSTALL_FULL_DATADIR}/doc/ome-common/api/ome-common.tag")
+  set(OME_XML_TAGFILE "${CMAKE_INSTALL_FULL_DATADIR}/doc/ome-xml/api/ome-xml.tag")
+  set(OME_FILES_TAGFILE "${CMAKE_INSTALL_FULL_DATADIR}/doc/ome-files/api/ome-files.tag")
 
-find_package(Threads REQUIRED)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ome-qtwidgets.dox.cmake
+                 ${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.dox @ONLY)
 
-function(thread_test namespace header library outvar outlib)
-  set(CMAKE_REQUIRED_DEFINITIONS_SAVE ${CMAKE_REQUIRED_DEFINITIONS})
-  set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS} -DBOOST_ALL_DYN_LINK -DBOOST_ALL_NO_LIB)
-  set(CMAKE_REQUIRED_INCLUDES_SAVE ${CMAKE_REQUIRED_INCLUDES})
-  set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${Boost_INCLUDE_DIRS})
-  set(CMAKE_REQUIRED_LIBRARIES_SAVE ${CMAKE_REQUIRED_LIBRARIES})
-  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${library} ${CMAKE_THREAD_LIBS_INIT})
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.log
+                     COMMAND ${CMAKE_COMMAND} -E remove_directory ome-qtwidgets
+                     COMMAND ${CMAKE_COMMAND} -E make_directory ome-qtwidgets
+                     COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.dox
+                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.dox)
 
-  check_cxx_source_runs(
-"#include <${header}>
-#include <iostream>
+  add_custom_target(doc-check
+                    COMMAND ${CMAKE_COMMAND} -Dlogfile=${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.log -P ${PROJECT_SOURCE_DIR}/cmake/DoxygenCheck.cmake
+                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.log)
 
-namespace
-{
+  add_custom_target(doc-api ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets.log doc-check)
+  # For backward compatibility
+  add_custom_target(doc DEPENDS doc-api)
 
-  boost::mutex m1;
-  boost::recursive_mutex m2;
-
-  void
-  threadmain()
-  {
-    boost::lock_guard<boost::mutex> lock1(m1);
-    boost::lock_guard<boost::recursive_mutex> lock2(m2);
-    std::cout << \"In thread\" << std::endl;
-  }
-
-}
-
-int main() {
-  ${namespace} foo(threadmain);
-  foo.join();
-
-  return 0;
-}"
-${outvar})
-
-  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES_SAVE})
-  set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
-  set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS_SAVE})
-
-  set(${outvar} ${${outvar}} PARENT_SCOPE)
-  if (${outvar})
-    set(${outlib} ${library} PARENT_SCOPE)
-  endif(${outvar})
-endfunction(thread_test)
-
-
-thread_test(boost::thread boost/thread.hpp "${Boost_SYSTEM_LIBRARY_RELEASE};${Boost_THREAD_LIBRARY_RELEASE}" OME_HAVE_BOOST_THREAD THREAD_LIBRARY)
-if(NOT OME_HAVE_BOOST_THREAD)
-  message(FATAL_ERROR "No working thread or mutex implementation found")
-endif(NOT OME_HAVE_BOOST_THREAD)
+  install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/ome-qtwidgets/"
+          DESTINATION "${CMAKE_INSTALL_DOCDIR}/api")
+endif(BUILD_DOXYGEN)

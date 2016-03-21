@@ -1,5 +1,5 @@
 # #%L
-# OME Files C++ libraries (cmake build infrastructure)
+# OME QtWidgets libraries (cmake build infrastructure)
 # %%
 # Copyright © 2006 - 2015 Open Microscopy Environment:
 #   - Massachusetts Institute of Technology
@@ -41,6 +41,9 @@ endif(POLICY CMP0043)
 
 if (OME_QTOPENGL)
 
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-internal.h.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/config-internal.h @ONLY)
+
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -54,6 +57,7 @@ if (OME_QTOPENGL)
       GLContainer.cpp
       GLWindow.cpp
       GLView2D.cpp
+      module.cpp
       NavigationDock2D.cpp
       TexelProperties.cpp)
 
@@ -62,8 +66,12 @@ if (OME_QTOPENGL)
       GLWindow.h
       GLView2D.h
       glm.h
+      module.h
       NavigationDock2D.h
       TexelProperties.h)
+
+  set(OME_QTWIDGETS_GENERATED_PRIVATE_HEADERS
+      ${CMAKE_CURRENT_BINARY_DIR}/config-internal.h)
 
   set(QTWIDGETS_GL_SOURCES
       gl/Axis2D.cpp
@@ -100,6 +108,7 @@ if (OME_QTOPENGL)
   add_library(ome-qtwidgets
               ${QTWIDGETS_SOURCES}
               ${QTWIDGETS_HEADERS}
+              ${OME_QTWIDGETS_GENERATED_PRIVATE_HEADERS}
               ${QTWIDGETS_GL_SOURCES}
               ${QTWIDGETS_GL_HEADERS}
               ${QTWIDGETS_GL_V20_SOURCES}

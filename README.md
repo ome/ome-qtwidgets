@@ -1,17 +1,14 @@
-# OME-Files C++
+# OME-QtWidgets
 
-OME-Files is a standalone C++ library for reading and writing life sciences
-image file formats.
+OME-QtWidgets is a simple set of widgets and a viewer for simple image
+rendering using OME Files C++.
 
 
 Purpose
 -------
 
-OME-Files' primary purpose is to convert proprietary microscopy data into 
-an open standard called the OME data model, particularly into the OME-TIFF 
-file format. See the [statement of purpose](http://www.openmicroscopy.org/site/support/bio-formats/about/index.html) 
-for a thorough explanation and rationale.
-
+Simple image rendering with OpenGL and Qt5 using OME Files C++ to read
+image pixel data and metadata.
 
 Supported formats
 -----------------

@@ -1,8 +1,8 @@
 /*
  * #%L
- * # OME QtWidgets libraries (test infrastructure)
+ * OME-QTWIDGETS C++ library for display of OME-Files pixel data and metadata.
  * %%
- * Copyright © 2013 - 2015 Open Microscopy Environment:
+ * Copyright © 2016 Open Microscopy Environment:
  *   - Massachusetts Institute of Technology
  *   - National Institutes of Health
  *   - University of Dundee
@@ -36,28 +36,38 @@
  * #L%
  */
 
-#include <ome/test/test.h>
-#include <ome/test/io.h>
+#ifndef OME_QTWIDGETS_MODULE_H
+#define OME_QTWIDGETS_MODULE_H
 
-#include <boost/filesystem/fstream.hpp>
-
-void
-readFile(const boost::filesystem::path& filename,
-         std::string&                   str)
+namespace ome
 {
-  boost::filesystem::ifstream in(filename);
-  readFile(in, str);
+  namespace qtwidgets
+  {
+
+    /**
+     * Register the OME-QtWidgets module paths with OME-Common.
+     *
+     * This function forces path registration.
+     *
+     * @note This is a hack to allow static linking to work on
+     * Windows; without this, the module object is omitted and the
+     * paths aren't automatically registered.  This will no longer be
+     * required once it is built as a DLL.  Its only purpose is to
+     * force object inclusion when static linking, and ensure that the
+     * registration happens independently of object static
+     * construction order to allow use prior to main() entry.  You
+     * should not use this.
+     */
+    void
+    register_module_paths();
+
+  }
 }
 
-void
-readFile(std::istream& stream,
-         std::string&  str)
-{
-  ASSERT_TRUE(!!stream);
-  stream.seekg(0, std::ios::end);
-  str.reserve(stream.tellg());
-  stream.seekg(0, std::ios::beg);
+#endif // OME_QTWIDGETS_MODULE_H
 
-  str.assign(std::istreambuf_iterator<char>(stream),
-             std::istreambuf_iterator<char>());
-}
+/*
+ * Local Variables:
+ * mode:C++
+ * End:
+ */

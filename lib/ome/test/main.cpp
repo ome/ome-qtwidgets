@@ -1,6 +1,6 @@
 /*
  * #%L
- * # OME Files C++ libraries (test infrastructure)
+ * # OME QtWidgets libraries (test infrastructure)
  * %%
  * Copyright © 2013 - 2015 Open Microscopy Environment:
  *   - Massachusetts Institute of Technology
@@ -55,7 +55,7 @@ main (int   argc,
 bool
 verbose ()
 {
-  static bool v(getenv("OME_FILES_TEST_VERBOSE")
-                && std::string(getenv("OME_FILES_TEST_VERBOSE")) == "true");
+  static bool v(getenv("TEST_VERBOSE")
+                && std::string(getenv("TEST_VERBOSE")) == "true");
   return v;
 }

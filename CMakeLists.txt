@@ -1,5 +1,5 @@
 # #%L
-# OME Files C++ libraries (cmake build infrastructure)
+# OME QtWidgets libraries (cmake build infrastructure)
 # %%
 # Copyright © 2006 - 2015 Open Microscopy Environment:
 #   - Massachusetts Institute of Technology
@@ -49,10 +49,10 @@ list(APPEND CMAKE_MODULE_PATH
 
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/BioFormatsCommon.cmake")
 
-project(ome-files)
+project(ome-qtwidgets)
 
 include(cmake/Version.cmake)
-ome_project_version("OME Files C++" "${CMAKE_CURRENT_SOURCE_DIR}")
+ome_project_version("OME Qt Widgets" "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
   message(FATAL_ERROR "In-tree builds are not supported; please run cmake from a separate build directory.")
@@ -81,7 +81,7 @@ include(GTest)
 include(Doxygen)
 include(HeaderTest)
 
-find_package(OME 5.2.0 REQUIRED Compat Common XML)
+find_package(OME 5.2.0 REQUIRED Compat Common XML Files)
 
 if(MSVC)
   # Debug library suffix.
@@ -94,28 +94,28 @@ if(MSVC)
 endif()
 
 
-if(NOT DEFINED OME_FILES_INSTALL_PKGDATADIR)
-  set(OME_FILES_INSTALL_PKGDATADIR "${CMAKE_INSTALL_DATADIR}/ome/files"
-      CACHE PATH "OME Files-specific datadir")
+if(NOT DEFINED OME_QTWIDGETS_INSTALL_PKGDATADIR)
+  set(OME_QTWIDGETS_INSTALL_PKGDATADIR "${CMAKE_INSTALL_DATADIR}/ome/files"
+      CACHE PATH "OME Qt Widgets-specific datadir")
 endif()
 
 # Use standard path if using a prefix.
 if(CMAKE_INSTALL_PREFIX)
-  if (NOT DEFINED OME_FILES_INSTALL_PKGLIBEXECDIR)
-    set(OME_FILES_INSTALL_PKGLIBEXECDIR "${CMAKE_INSTALL_LIBEXECDIR}/ome/files"
-        CACHE PATH "OME Files-specific libexecdir")
+  if (NOT DEFINED OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR)
+    set(OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR "${CMAKE_INSTALL_LIBEXECDIR}/ome/files"
+        CACHE PATH "OME Qt Widgets-specific libexecdir")
   endif()
-  if (NOT DEFINED OME_FILES_INSTALL_ICONDIR)
-    set(OME_FILES_INSTALL_ICONDIR "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable"
+  if (NOT DEFINED OME_QTWIDGETS_INSTALL_ICONDIR)
+    set(OME_QTWIDGETS_INSTALL_ICONDIR "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable"
         CACHE PATH "Icon directory")
   endif()
 else()
-  if (NOT DEFINED OME_FILES_INSTALL_PKGLIBEXECDIR)
-    set(OME_FILES_INSTALL_PKGLIBEXECDIR "${CMAKE_INSTALL_LIBEXECDIR}"
-        CACHE PATH "OME Files-specific libexecdir")
+  if (NOT DEFINED OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR)
+    set(OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR "${CMAKE_INSTALL_LIBEXECDIR}"
+        CACHE PATH "OME Qt Widgets-specific libexecdir")
   endif()
-  if (NOT DEFINED OME_FILES_INSTALL_ICONDIR)
-    set(OME_FILES_INSTALL_ICONDIR "${CMAKE_INSTALL_DATADIR}/icons"
+  if (NOT DEFINED OME_QTWIDGETS_INSTALL_ICONDIR)
+    set(OME_QTWIDGETS_INSTALL_ICONDIR "${CMAKE_INSTALL_DATADIR}/icons"
         CACHE PATH "Icon directory")
   endif()
 endif()
@@ -125,11 +125,10 @@ foreach(dir
     PKGLIBEXECDIR
     ICONDIR
   )
-  mark_as_advanced(OME_FILES_INSTALL_${dir})
+  mark_as_advanced(OME_QTWIDGETS_INSTALL_${dir})
 endforeach()
 
 add_subdirectory(docs/doxygen)
-add_subdirectory(docs/sphinx)
 
 set(OME_TOPLEVEL_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
@@ -145,30 +144,4 @@ add_subdirectory(lib)
 add_subdirectory(libexec)
 add_subdirectory(share/icons)
 add_subdirectory(test)
-add_subdirectory(examples)
 
-set(LIBRARY_PREFIX OME)
-file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
-configure_file(${PROJECT_SOURCE_DIR}/cmake/TemplateShellConfig.cmake.in
-               ${PROJECT_BINARY_DIR}/config @ONLY)
-configure_file(${PROJECT_SOURCE_DIR}/cmake/TemplateInternalShellWrapper.cmake.in
-               ${PROJECT_BINARY_DIR}/cmake/ome-files @ONLY)
-configure_file(${PROJECT_SOURCE_DIR}/cmake/TemplateShellWrapper.cmake.in
-               ${PROJECT_BINARY_DIR}/bin/ome-files @ONLY)
-file(COPY ${PROJECT_BINARY_DIR}/cmake/ome-files
-     DESTINATION ${PROJECT_BINARY_DIR}
-     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ
-     GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-install(PROGRAMS ${PROJECT_BINARY_DIR}/bin/ome-files
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
-if(WIN32)
-  configure_file(${PROJECT_SOURCE_DIR}/cmake/TemplateCmdConfig.cmake.in
-                 ${PROJECT_BINARY_DIR}/config.bat @ONLY)
-  configure_file(${PROJECT_SOURCE_DIR}/cmake/TemplateInternalCmdWrapper.cmake.in
-                 ${PROJECT_BINARY_DIR}/ome-files.bat @ONLY)
-  configure_file(${PROJECT_SOURCE_DIR}/cmake/TemplateCmdWrapper.cmake.in
-                 ${PROJECT_BINARY_DIR}/bin/ome-files.bat @ONLY)
-  install(PROGRAMS ${PROJECT_BINARY_DIR}/bin/ome-files.bat
-          DESTINATION ${CMAKE_INSTALL_BINDIR})
-  endif()
-return()

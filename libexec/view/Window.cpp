@@ -41,11 +41,12 @@
 #include <ome/files/FormatReader.h>
 #include <ome/files/in/OMETIFFReader.h>
 
-#include <ome/common/module.h>
-
 #include <ome/compat/memory.h>
 
+#include <ome/common/module.h>
+
 #include <ome/qtwidgets/GLContainer.h>
+#include <ome/qtwidgets/module.h>
 
 #include <QtWidgets>
 
@@ -81,7 +82,8 @@ namespace view
 
   void Window::createActions()
   {
-    boost::filesystem::path iconpath(ome::common::module_runtime_path("ome-files-icon"));
+    ome::qtwidgets::register_module_paths();
+    boost::filesystem::path iconpath(ome::common::module_runtime_path("ome-qtwidgets-icon"));
 
     openAction = new QAction(tr("&Open image..."), this);
     openAction->setShortcuts(QKeySequence::Open);
