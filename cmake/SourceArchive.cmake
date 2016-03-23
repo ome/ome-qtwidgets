@@ -2,7 +2,7 @@ if(SOURCE_ARCHIVE_DIR AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
   message(STATUS "Determining source archive file names")
 
   execute_process(COMMAND python ${PROJECT_SOURCE_DIR}/scripts/source-archive
-                          --release=ome-files-cpp
+                          --release=ome-qtwidgets
                           "--target=${SOURCE_ARCHIVE_DIR}"
                           --list
                           --tag=HEAD
@@ -24,7 +24,7 @@ if(SOURCE_ARCHIVE_DIR AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
                        COMMAND "${CMAKE_COMMAND}" -E make_directory
                                "${SOURCE_ARCHIVE_DIR}"
                        COMMAND python "${PROJECT_SOURCE_DIR}/scripts/source-archive"
-                               --release=ome-files-cpp
+                               --release=ome-qtwidgets
                                "--target=${SOURCE_ARCHIVE_DIR}"
                                --tag=HEAD
                        DEPENDS "${PROJECT_SOURCE_DIR}/scripts/source-archive"
