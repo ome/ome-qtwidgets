@@ -36,10 +36,18 @@
  * #L%
  */
 
-#include <ome/qtwidgets/gl/v20/V20Grid2D.h>
-#include <ome/qtwidgets/gl/Util.h>
+#ifndef OME_QTWIDGETS_GL_V33_V33AXIS2D_H
+#define OME_QTWIDGETS_GL_V33_V33AXIS2D_H
 
-#include <cmath>
+#include <QtCore/QObject>
+#include <QtGui/QOpenGLBuffer>
+#include <QtGui/QOpenGLShader>
+
+#include <ome/files/Types.h>
+#include <ome/files/FormatReader.h>
+
+#include <ome/qtwidgets/gl/Axis2D.h>
+#include <ome/qtwidgets/glsl/v330/V330GLFlatShader2D.h>
 
 namespace ome
 {
@@ -47,49 +55,57 @@ namespace ome
   {
     namespace gl
     {
-      namespace v20
+      namespace v33
       {
 
-        Grid2D::Grid2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
-                       ome::files::dimension_size_type                    series,
-                       QObject                                                *parent):
-          gl::Grid2D(reader, series, parent),
-          grid_shader(new glsl::v110::GLLineShader2D(this))
+        /**
+         * 2D (xy) axis renderer.
+         *
+         * Draws x and y axes for the specified image.
+         */
+        class Axis2D : public gl::Axis2D
         {
-        }
+          Q_OBJECT
 
-        Grid2D::~Grid2D()
-        {
-        }
+        public:
+          /**
+           * Create a 2D axis.
+           *
+           * The size and position will be taken from the specified image.
+           *
+           * @param reader the image reader.
+           * @param series the image series.
+           * @param parent the parent of this object.
+           */
+          explicit Axis2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+                          ome::files::dimension_size_type                    series,
+                          QObject                                           *parent = 0);
 
-        void
-        Grid2D::render(const glm::mat4& mvp,
-                       float zoom)
-        {
-          grid_shader->bind();
+          /// Destructor.
+          ~Axis2D();
 
-          // Render grid
-          grid_shader->setModelViewProjection(mvp);
-          grid_shader->setZoom(zoom);
+          /**
+           * Render the axis.
+           *
+           * @param mvp the model view projection matrix.
+           */
+          void
+          render(const glm::mat4& mvp);
 
-          grid_shader->enableCoords();
-          grid_shader->setCoords(grid_vertices, 0, 3, 6 * sizeof(GLfloat));
-
-          grid_shader->enableColour();
-          grid_shader->setColour(grid_vertices, reinterpret_cast<const GLfloat *>(0)+3, 3, 6 * sizeof(GLfloat));
-
-          // Push each element to the vertex shader
-          grid_elements.bind();
-          glDrawElements(GL_LINES, grid_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-          check_gl("Grid draw elements");
-
-          grid_shader->disableColour();
-          grid_shader->disableCoords();
-
-          grid_shader->release();
-        }
+        private:
+          /// The shader program for axis rendering.
+          glsl::v330::GLFlatShader2D *axis_shader;
+        };
 
       }
     }
   }
 }
+
+#endif // OME_QTWIDGETS_GL_V33_V33AXIS2D_H
+
+/*
+ * Local Variables:
+ * mode:C++
+ * End:
+ */

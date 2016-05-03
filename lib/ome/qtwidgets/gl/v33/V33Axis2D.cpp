@@ -36,7 +36,7 @@
  * #L%
  */
 
-#include <ome/qtwidgets/gl/v20/V20Image2D.h>
+#include <ome/qtwidgets/gl/v33/V33Axis2D.h>
 #include <ome/qtwidgets/gl/Util.h>
 
 #include <iostream>
@@ -47,57 +47,58 @@ namespace ome
   {
     namespace gl
     {
-      namespace v20
+      namespace v33
       {
 
-        Image2D::Image2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
-                         ome::files::dimension_size_type                    series,
-                         QObject                                                *parent):
-          gl::Image2D(reader, series, parent),
-          image_shader(new glsl::v110::GLImageShader2D(this))
+        Axis2D::Axis2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+                       ome::files::dimension_size_type                    series,
+                       QObject                                           *parent):
+          gl::Axis2D(reader, series, parent),
+          axis_shader(new glsl::v330::GLFlatShader2D(this))
         {
         }
 
-        Image2D::~Image2D()
+        Axis2D::~Axis2D()
         {
         }
 
         void
-        Image2D::render(const glm::mat4& mvp)
+        Axis2D::render(const glm::mat4& mvp)
         {
-          image_shader->bind();
+          axis_shader->bind();
 
-          image_shader->setMin(texmin);
-          image_shader->setMax(texmax);
-          image_shader->setCorrection(texcorr);
-          image_shader->setModelViewProjection(mvp);
+          vertices.bind();
 
-          glActiveTexture(GL_TEXTURE0);
-          check_gl("Activate texture");
-          glBindTexture(GL_TEXTURE_2D, textureid);
-          check_gl("Bind texture");
-          image_shader->setTexture(0);
-
-          glActiveTexture(GL_TEXTURE1);
-          check_gl("Activate texture");
-          glBindTexture(GL_TEXTURE_1D_ARRAY, lutid);
-          check_gl("Bind texture");
-          image_shader->setLUT(1);
-
-          image_shader->enableCoords();
-          image_shader->setCoords(image_vertices, 0, 2);
-
-          image_shader->enableTexCoords();
-          image_shader->setTexCoords(image_texcoords, 0, 2);
+          // Render x axis
+          axis_shader->setModelViewProjection(mvp);
+          axis_shader->setColour(glm::vec4(1.0, 0.0, 0.0, 1.0));
+          axis_shader->setOffset(glm::vec2(0.0, -40.0));
+          axis_shader->enableCoords();
+          axis_shader->setCoords(xaxis_vertices, 0, 2, 0);
 
           // Push each element to the vertex shader
-          image_elements.bind();
-          glDrawElements(GL_TRIANGLES, image_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-          check_gl("Image2D draw elements");
+          axis_elements.bind();
+          glDrawElements(GL_TRIANGLES, axis_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
+          check_gl("Axis X draw elements");
 
-          image_shader->disableCoords();
-          image_shader->disableTexCoords();
-          image_shader->release();
+          axis_shader->disableCoords();
+
+          // Render y axis
+          axis_shader->bind();
+          axis_shader->setModelViewProjection(mvp);
+          axis_shader->setColour(glm::vec4(0.0, 1.0, 0.0, 1.0));
+          axis_shader->setOffset(glm::vec2(-40.0, 0.0));
+          axis_shader->enableCoords();
+          axis_shader->setCoords(yaxis_vertices, 0, 2, 0);
+
+          // Push each element to the vertex shader
+          axis_elements.bind();
+          glDrawElements(GL_TRIANGLES, axis_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
+          check_gl("Axis Y draw elements");
+
+          axis_shader->disableCoords();
+          vertices.release();
+          axis_shader->release();
         }
 
       }

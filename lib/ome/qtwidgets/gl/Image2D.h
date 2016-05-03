@@ -40,9 +40,10 @@
 #define OME_QTWIDGETS_GL_IMAGE2D_H
 
 #include <QtCore/QObject>
+#include <QtGui/QOpenGLVertexArrayObject>
 #include <QtGui/QOpenGLBuffer>
 #include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 
 #include <ome/files/Types.h>
 #include <ome/files/FormatReader.h>
@@ -67,7 +68,7 @@ namespace ome
        * contrast.
        */
       class Image2D : public QObject,
-                      protected QOpenGLFunctions
+                      protected QOpenGLFunctions_3_3_Core
       {
         Q_OBJECT
 
@@ -202,6 +203,8 @@ namespace ome
         lut();
 
       protected:
+        /// The vertex array.
+        QOpenGLVertexArrayObject vertices;
         /// The image vertices.
         QOpenGLBuffer image_vertices;
         /// The image texture coordinates.

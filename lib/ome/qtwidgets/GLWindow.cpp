@@ -37,6 +37,7 @@
  */
 
 #include <cstdlib>
+#include <iostream>
 
 #include <ome/qtwidgets/GLWindow.h>
 
@@ -163,9 +164,9 @@ namespace ome
 
       if (!glcontext) {
         QSurfaceFormat format = requestedFormat();
-        // OpenGL 2.0 profile with debugging.
-        format.setVersion(2, 0);
-        format.setProfile(QSurfaceFormat::NoProfile);
+        // OpenGL 3.3 core profile with debugging.
+        format.setVersion(3, 3);
+        format.setProfile(QSurfaceFormat::CoreProfile);
         if (enableDebug)
           {
             format.setOption(QSurfaceFormat::DebugContext);
@@ -175,13 +176,12 @@ namespace ome
 
         glcontext = new QOpenGLContext(this);
         glcontext->setFormat(format);
-        glcontext->create();
+        bool valid = glcontext->create();
+        std::cerr << "Valid OpenGL context: " << valid << std::endl;
         makeCurrent();
 
         if (enableDebug)
           {
-            // The debug logger is broken on Windows for Qt 5.2 and earlier, so don't use.
-#if !defined(Q_OS_WIN) || QT_VERSION >= 0x050300
             logger = new QOpenGLDebugLogger(this);
             connect(logger, SIGNAL(messageLogged(QOpenGLDebugMessage)),
                     this, SLOT(logMessage(QOpenGLDebugMessage)),
@@ -191,7 +191,6 @@ namespace ome
                 logger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
                 logger->enableMessages();
               }
-#endif // !defined(Q_OS_WIN) || QT_VERSION >= 0x050300
           }
 
         needsInitialize = true;
@@ -225,7 +224,7 @@ namespace ome
     void
     GLWindow::logMessage(QOpenGLDebugMessage message)
     {
-      qDebug() << message;
+      std::cerr << message.message().toStdString();
     }
 
   }

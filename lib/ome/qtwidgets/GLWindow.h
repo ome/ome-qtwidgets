@@ -40,7 +40,7 @@
 #define OME_QTWIDGETS_GLWINDOW_H
 
 #include <QtGui/QWindow>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 #include <QtGui/QOpenGLDebugMessage>
 
 QT_BEGIN_NAMESPACE
@@ -63,7 +63,7 @@ namespace ome
      * content.
      */
     class GLWindow : public QWindow,
-                     protected QOpenGLFunctions
+                     protected QOpenGLFunctions_3_3_Core
     {
       Q_OBJECT
 

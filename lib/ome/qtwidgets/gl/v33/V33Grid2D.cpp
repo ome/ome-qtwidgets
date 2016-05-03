@@ -36,77 +36,62 @@
  * #L%
  */
 
-#ifndef OME_QTWIDGETS_GL_V20_V20IMAGE2D_H
-#define OME_QTWIDGETS_GL_V20_V20IMAGE2D_H
+#include <ome/qtwidgets/gl/v33/V33Grid2D.h>
+#include <ome/qtwidgets/gl/Util.h>
 
-#include <QtCore/QObject>
-#include <QtGui/QOpenGLBuffer>
-#include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLFunctions>
-
-#include <ome/files/Types.h>
-#include <ome/files/FormatReader.h>
-
-#include <ome/qtwidgets/gl/Image2D.h>
-#include <ome/qtwidgets/glsl/v110/GLImageShader2D.h>
+#include <cmath>
 
 namespace ome
 {
   namespace qtwidgets
   {
-    /// OpenGL rendering.
     namespace gl
     {
-      /// OpenGL v2.0 (compatibility profile).
-      namespace v20
+      namespace v33
       {
 
-        /**
-         * 2D (xy) image renderer.
-         *
-         * Draws the specified image, using a user-selectable plane.
-         *
-         * The render is greyscale with a per-channel min/max for linear
-         * contrast.
-         */
-        class Image2D : public gl::Image2D
+        Grid2D::Grid2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+                       ome::files::dimension_size_type                    series,
+                       QObject                                           *parent):
+          gl::Grid2D(reader, series, parent),
+          grid_shader(new glsl::v330::GLLineShader2D(this))
         {
-          Q_OBJECT
+        }
 
-        public:
-          /**
-           * Create a 2D image.
-           *
-           * The size and position will be taken from the specified image.
-           *
-           * @param reader the image reader.
-           * @param series the image series.
-           * @param parent the parent of this object.
-           */
-          explicit Image2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
-                           ome::files::dimension_size_type                    series,
-                           QObject                                                *parent = 0);
+        Grid2D::~Grid2D()
+        {
+        }
 
-          /// Destructor.
-          virtual ~Image2D();
+        void
+        Grid2D::render(const glm::mat4& mvp,
+                       float zoom)
+        {
+          grid_shader->bind();
 
-          void
-          render(const glm::mat4& mvp);
+          // Render grid
+          grid_shader->setModelViewProjection(mvp);
+          grid_shader->setZoom(zoom);
 
-        private:
-          /// The shader program for image rendering.
-          glsl::v110::GLImageShader2D *image_shader;
-        };
+          vertices.bind();
+
+          grid_shader->enableCoords();
+          grid_shader->setCoords(grid_vertices, 0, 3, 6 * sizeof(GLfloat));
+
+          grid_shader->enableColour();
+          grid_shader->setColour(grid_vertices, reinterpret_cast<const GLfloat *>(0)+3, 3, 6 * sizeof(GLfloat));
+
+          // Push each element to the vertex shader
+          grid_elements.bind();
+          glDrawElements(GL_LINES, grid_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
+          check_gl("Grid draw elements");
+
+          grid_shader->disableColour();
+          grid_shader->disableCoords();
+          vertices.release();
+          grid_shader->release();
+        }
 
       }
     }
   }
 }
-
-#endif // OME_QTWIDGETS_GL_V20_V20IMAGE2D_H
-
-/*
- * Local Variables:
- * mode:C++
- * End:
- */

@@ -37,7 +37,7 @@
  */
 
 #include <ome/qtwidgets/glm.h>
-#include <ome/qtwidgets/glsl/v110/GLImageShader2D.h>
+#include <ome/qtwidgets/glsl/v330/V330GLImageShader2D.h>
 #include <ome/qtwidgets/gl/Util.h>
 
 #include <iostream>
@@ -51,7 +51,7 @@ namespace ome
   {
     namespace glsl
     {
-      namespace v110
+      namespace v330
       {
 
         GLImageShader2D::GLImageShader2D(QObject *parent):
@@ -70,46 +70,55 @@ namespace ome
 
           vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
 
-          std::string vsource("#version 110\n"
-                              "\n"
-                              "attribute vec2 coord2d;\n"
-                              "attribute vec2 texcoord;\n"
-                              "varying vec2 f_texcoord;\n"
-                              "uniform mat4 mvp;\n"
-                              "\n"
-                              "void main(void) {\n"
-                              "  gl_Position = mvp * vec4(coord2d, 0.0, 1.0);\n"
-                              "  f_texcoord = texcoord;\n"
-                              "}\n");
+          vshader->compileSourceCode
+            ("#version 330 core\n"
+             "\n"
+             "layout (location = 0) in vec2 coord2d;\n"
+             "layout (location = 1) in vec2 texcoord;\n"
+             "uniform mat4 mvp;\n"
+             "\n"
+             "out VertexData\n"
+             "{\n"
+             "  vec2 f_texcoord;\n"
+             "} outData;\n"
+             "\n"
+             "void main(void) {\n"
+             "  gl_Position = mvp * vec4(coord2d, 0.0, 1.0);\n"
+             "  outData.f_texcoord = texcoord;\n"
+             "}\n");
 
-          vshader->compileSourceCode(vsource.c_str());
           if (!vshader->isCompiled())
             {
-              std::cerr << "Failed to compile vertex shader\n" << vshader->log().toStdString() << std::endl;
+              std::cerr << "V330GLImageShader2D: Failed to compile vertex shader\n" << vshader->log().toStdString() << std::endl;
             }
 
           fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-          std::string fsource("#version 110\n"
-                              "#extension GL_EXT_texture_array : enable\n"
-                              "\n"
-                              "varying vec2 f_texcoord;\n"
-                              "uniform sampler2D tex;\n"
-                              "uniform sampler1DArray lut;\n"
-                              "uniform vec3 texmin;\n"
-                              "uniform vec3 texmax;\n"
-                              "uniform vec3 correction;\n"
-                              "\n"
-                              "void main(void) {\n"
-                              "  vec2 flipped_texcoord = vec2(f_texcoord.x, 1.0 - f_texcoord.y);\n"
-                              "  vec4 texval = texture2D(tex, flipped_texcoord);\n"
-                              "\n"
-                              "  gl_FragColor = texture1DArray(lut, vec2(((((texval[0] * correction[0]) - texmin[0]) / (texmax[0] - texmin[0]))), 0.0));\n"
-                              "}\n");
+          fshader->compileSourceCode
+            ("#version 330 core\n"
+             "\n"
+             "uniform sampler2D tex;\n"
+             "uniform sampler1DArray lut;\n"
+             "uniform vec3 texmin;\n"
+             "uniform vec3 texmax;\n"
+             "uniform vec3 correction;\n"
+             "\n"
+             "in VertexData\n"
+             "{\n"
+             "  vec2 f_texcoord;\n"
+             "} inData;\n"
+             "\n"
+             "out vec4 outputColour;\n"
+             "\n"
+             "void main(void) {\n"
+             "  vec2 flipped_texcoord = vec2(inData.f_texcoord.x, 1.0 - inData.f_texcoord.y);\n"
+             "  vec4 texval = texture(tex, flipped_texcoord);\n"
+             "\n"
+             "  outputColour = texture(lut, vec2(((((texval[0] * correction[0]) - texmin[0]) / (texmax[0] - texmin[0]))), 0.0));\n"
+             "}\n");
 
-          fshader->compileSourceCode(fsource.c_str());
           if (!fshader->isCompiled())
             {
-              std::cerr << "Failed to compile fragment shader\n" << fshader->log().toStdString() << std::endl;
+              std::cerr << "V330GLImageShader2D: Failed to compile fragment shader\n" << fshader->log().toStdString() << std::endl;
             }
 
           addShader(vshader);
@@ -118,40 +127,40 @@ namespace ome
 
           if (!isLinked())
             {
-              std::cerr << "Failed to link shader program\n" << log().toStdString() << std::endl;
+              std::cerr << "V330GLImageShader2D: Failed to link shader program\n" << log().toStdString() << std::endl;
             }
 
           attr_coords = attributeLocation("coord2d");
           if (attr_coords == -1)
-            std::cerr << "Failed to bind coordinates" << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind coordinates" << std::endl;
 
           attr_texcoords = attributeLocation("texcoord");
           if (attr_texcoords == -1)
-            std::cerr << "Failed to bind texture coordinates" << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind texture coordinates" << std::endl;
 
           uniform_mvp = uniformLocation("mvp");
           if (uniform_mvp == -1)
-            std::cerr << "Failed to bind transform" << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind transform" << std::endl;
 
           uniform_texture = uniformLocation("tex");
           if (uniform_texture == -1)
-            std::cerr << "Failed to bind texture uniform " << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind texture uniform " << std::endl;
 
           uniform_lut = uniformLocation("lut");
           if (uniform_lut == -1)
-            std::cerr << "Failed to bind lut uniform " << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind lut uniform " << std::endl;
 
           uniform_min = uniformLocation("texmin");
           if (uniform_min == -1)
-            std::cerr << "Failed to bind min uniform " << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind min uniform " << std::endl;
 
           uniform_max = uniformLocation("texmax");
           if (uniform_max == -1)
-            std::cerr << "Failed to bind max uniform " << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind max uniform " << std::endl;
 
           uniform_corr = uniformLocation("correction");
           if (uniform_corr == -1)
-            std::cerr << "Failed to bind correction uniform " << std::endl;
+            std::cerr << "V330GLImageShader2D: Failed to bind correction uniform " << std::endl;
         }
 
         GLImageShader2D::~GLImageShader2D()

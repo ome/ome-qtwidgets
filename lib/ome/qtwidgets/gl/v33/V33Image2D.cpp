@@ -36,19 +36,10 @@
  * #L%
  */
 
-#ifndef OME_QTWIDGETS_GL_V20_V20AXIS2D_H
-#define OME_QTWIDGETS_GL_V20_V20AXIS2D_H
+#include <ome/qtwidgets/gl/v33/V33Image2D.h>
+#include <ome/qtwidgets/gl/Util.h>
 
-#include <QtCore/QObject>
-#include <QtGui/QOpenGLBuffer>
-#include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLFunctions>
-
-#include <ome/files/Types.h>
-#include <ome/files/FormatReader.h>
-
-#include <ome/qtwidgets/gl/Axis2D.h>
-#include <ome/qtwidgets/glsl/v110/GLFlatShader2D.h>
+#include <iostream>
 
 namespace ome
 {
@@ -56,57 +47,63 @@ namespace ome
   {
     namespace gl
     {
-      namespace v20
+      namespace v33
       {
 
-        /**
-         * 2D (xy) axis renderer.
-         *
-         * Draws x and y axes for the specified image.
-         */
-        class Axis2D : public gl::Axis2D
+        Image2D::Image2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+                         ome::files::dimension_size_type                    series,
+                         QObject                                           *parent):
+          gl::Image2D(reader, series, parent),
+          image_shader(new glsl::v330::GLImageShader2D(this))
         {
-          Q_OBJECT
+        }
 
-        public:
-          /**
-           * Create a 2D axis.
-           *
-           * The size and position will be taken from the specified image.
-           *
-           * @param reader the image reader.
-           * @param series the image series.
-           * @param parent the parent of this object.
-           */
-          explicit Axis2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
-                          ome::files::dimension_size_type                    series,
-                          QObject                                                *parent = 0);
+        Image2D::~Image2D()
+        {
+        }
 
-          /// Destructor.
-          ~Axis2D();
+        void
+        Image2D::render(const glm::mat4& mvp)
+        {
+          image_shader->bind();
 
-          /**
-           * Render the axis.
-           *
-           * @param mvp the model view projection matrix.
-           */
-          void
-          render(const glm::mat4& mvp);
+          image_shader->setMin(texmin);
+          image_shader->setMax(texmax);
+          image_shader->setCorrection(texcorr);
+          image_shader->setModelViewProjection(mvp);
 
-        private:
-          /// The shader program for axis rendering.
-          glsl::v110::GLFlatShader2D *axis_shader;
-        };
+          glActiveTexture(GL_TEXTURE0);
+          check_gl("Activate texture");
+          glBindTexture(GL_TEXTURE_2D, textureid);
+          check_gl("Bind texture");
+          image_shader->setTexture(0);
+
+          glActiveTexture(GL_TEXTURE1);
+          check_gl("Activate texture");
+          glBindTexture(GL_TEXTURE_1D_ARRAY, lutid);
+          check_gl("Bind texture");
+          image_shader->setLUT(1);
+
+          vertices.bind();
+
+          image_shader->enableCoords();
+          image_shader->setCoords(image_vertices, 0, 2);
+
+          image_shader->enableTexCoords();
+          image_shader->setTexCoords(image_texcoords, 0, 2);
+
+          // Push each element to the vertex shader
+          image_elements.bind();
+          glDrawElements(GL_TRIANGLES, image_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
+          check_gl("Image2D draw elements");
+
+          image_shader->disableCoords();
+          image_shader->disableTexCoords();
+          vertices.release();
+          image_shader->release();
+        }
 
       }
     }
   }
 }
-
-#endif // OME_QTWIDGETS_GL_V20_V20AXIS2D_H
-
-/*
- * Local Variables:
- * mode:C++
- * End:
- */

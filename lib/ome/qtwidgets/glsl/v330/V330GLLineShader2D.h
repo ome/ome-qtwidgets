@@ -36,12 +36,12 @@
  * #L%
  */
 
-#ifndef OME_QTWIDGETS_GLSL_V110_GLFLATSHADER2D_H
-#define OME_QTWIDGETS_GLSL_V110_GLFLATSHADER2D_H
+#ifndef OME_QTWIDGETS_GLSL_V330_V330GLLINESHADER2D_H
+#define OME_QTWIDGETS_GLSL_V330_V330GLLINESHADER2D_H
 
 #include <QOpenGLShader>
 #include <QOpenGLBuffer>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 
 #include <ome/qtwidgets/glm.h>
 
@@ -51,13 +51,14 @@ namespace ome
   {
     namespace glsl
     {
-      namespace v110
+      namespace v330
       {
 
         /**
-         * 2D flat (solid fill) shader program.
+         * 2D line shader program.
          */
-        class GLFlatShader2D : public QOpenGLShaderProgram, protected QOpenGLFunctions
+        class GLLineShader2D : public QOpenGLShaderProgram,
+                               protected QOpenGLFunctions_3_3_Core
         {
           Q_OBJECT
 
@@ -67,10 +68,10 @@ namespace ome
            *
            * @param parent the parent of this object.
            */
-          explicit GLFlatShader2D(QObject *parent = 0);
+          explicit GLLineShader2D(QObject *parent = 0);
 
           /// Destructor.
-          ~GLFlatShader2D();
+          ~GLLineShader2D();
 
           /// @copydoc GLImageShader2D::enableCoords()
           void
@@ -82,31 +83,64 @@ namespace ome
 
           /// @copydoc GLImageShader2D::setCoords(const GLfloat*, int, int)
           void
-          setCoords(const GLfloat *offset, int tupleSize, int stride = 0);
+          setCoords(const GLfloat *offset,
+                    int            tupleSize,
+                    int            stride = 0);
 
-          /// @copydoc GLImageShader2D::setCoords(QOpenGLBuffer&, const GLfloat*, int, int)
+          /// @copydoc GLImageShader2D::setCoords(QOpenGLBuffer&, const GLfloat *, int, int)
           void
-          setCoords(QOpenGLBuffer& coords, const GLfloat *offset, int tupleSize, int stride = 0);
+          setCoords(QOpenGLBuffer&  coords,
+                    const GLfloat  *offset,
+                    int             tupleSize,
+                    int             stride = 0);
+
+          /// Enable colour array.
+          void
+          enableColour();
+
+          /// Disable colour array.
+          void
+          disableColour();
 
           /**
-           * Set fill colour.
+           * Set colours from array.
            *
-           * @param colour the RGBA fill colour.
+           * @param offset data offset if using a buffer object otherwise
+           * the colour values.
+           * @param tupleSize the tuple size of the data.
+           * @param stride the stride of the data.
            */
           void
-          setColour(const glm::vec4& colour);
+          setColour(const GLfloat *offset,
+                    int            tupleSize,
+                    int            stride = 0);
 
           /**
-           * Set xy offset in model space.
+           * Set colours from buffer object.
            *
-           * @param offset the offset to apply to the model.
+           * @param colours the colour values; null if using a buffer
+           * object.
+           * @param offset the offset into the colours buffer.
+           * @param tupleSize the tuple size of the data.
+           * @param stride the stride of the data.
            */
           void
-          setOffset(const glm::vec2& offset);
+          setColour(QOpenGLBuffer&  colours,
+                    const GLfloat  *offset,
+                    int             tupleSize,
+                    int             stride = 0);
 
           /// @copydoc GLImageShader2D::setModelViewProjection(const glm::mat4& mvp)
           void
           setModelViewProjection(const glm::mat4& mvp);
+
+          /**
+           * Set zoom level.
+           *
+           * @param zoom the zoom level.
+           */
+          void
+          setZoom(float zoom);
 
         private:
           /// @copydoc GLImageShader2D::vshader
@@ -116,12 +150,12 @@ namespace ome
 
           /// @copydoc GLImageShader2D::attr_coords
           int attr_coords;
-          /// Fill colour uniform.
-          int uniform_colour;
-          /// Model offset uniform.
-          int uniform_offset;
+          /// Vertex colour attribute
+          int attr_colour;
           /// @copydoc GLImageShader2D::uniform_mvp
           int uniform_mvp;
+          /// Zoom uniform.
+          int uniform_zoom;
         };
 
       }
@@ -129,7 +163,7 @@ namespace ome
   }
 }
 
-#endif // OME_QTWIDGETS_GLSL_V110_GLFLATSHADER2D_H
+#endif // OME_QTWIDGETS_GLSL_V330_V330GLLINESHADER2D_H
 
 /*
  * Local Variables:

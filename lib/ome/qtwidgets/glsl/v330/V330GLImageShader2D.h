@@ -36,12 +36,12 @@
  * #L%
  */
 
-#ifndef OME_QTWIDGETS_GLSL_V110_GLIMAGESHADER2D_H
-#define OME_QTWIDGETS_GLSL_V110_GLIMAGESHADER2D_H
+#ifndef OME_QTWIDGETS_GLSL_V330_V330GLIMAGESHADER2D_H
+#define OME_QTWIDGETS_GLSL_V330_V330GLIMAGESHADER2D_H
 
 #include <QOpenGLShader>
 #include <QOpenGLBuffer>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 
 #include <ome/files/Types.h>
 
@@ -55,14 +55,14 @@ namespace ome
     namespace glsl
     {
       /// GLSL v1.10 compatible.
-      namespace v110
+      namespace v330
       {
 
         /**
          * 2D image shader program (simple, up to three channels).
          */
         class GLImageShader2D : public QOpenGLShaderProgram,
-                                protected QOpenGLFunctions
+                                protected QOpenGLFunctions_3_3_Core
         {
           Q_OBJECT
 
@@ -233,7 +233,7 @@ namespace ome
   }
 }
 
-#endif // OME_QTWIDGETS_GLSL_V110_GLIMAGESHADER2D_H
+#endif // OME_QTWIDGETS_GLSL_V330_V330GLIMAGESHADER2D_H
 
 /*
  * Local Variables:
