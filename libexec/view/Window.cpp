@@ -36,10 +36,13 @@
  * #L%
  */
 
-#include <view/Window.h>
-
+// Include first to avoid clash with Windows headers pulled in via
+// QtCore/qt_windows.h; they define VOID and HALFTONE which clash with
+// the TIFF enums.
 #include <ome/files/FormatReader.h>
 #include <ome/files/in/OMETIFFReader.h>
+
+#include <view/Window.h>
 
 #include <ome/compat/memory.h>
 
