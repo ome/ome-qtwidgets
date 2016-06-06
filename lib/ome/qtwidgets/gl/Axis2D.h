@@ -40,9 +40,10 @@
 #define OME_QTWIDGETS_GL_AXIS2D_H
 
 #include <QtCore/QObject>
+#include <QtGui/QOpenGLVertexArrayObject>
 #include <QtGui/QOpenGLBuffer>
 #include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 
 #include <ome/files/Types.h>
 #include <ome/files/FormatReader.h>
@@ -50,7 +51,6 @@
 #include <ome/compat/memory.h>
 
 #include <ome/qtwidgets/glm.h>
-#include <ome/qtwidgets/glsl/v110/GLFlatShader2D.h>
 
 namespace ome
 {
@@ -64,7 +64,7 @@ namespace ome
        *
        * Draws x and y axes for the specified image.
        */
-      class Axis2D : public QObject, protected QOpenGLFunctions
+      class Axis2D : public QObject, protected QOpenGLFunctions_3_3_Core
       {
         Q_OBJECT
 
@@ -121,6 +121,8 @@ namespace ome
                 glm::vec2 soff,
                 glm::vec2 slim);
 
+        /// The vertex array.
+        QOpenGLVertexArrayObject vertices;
         /// The vertices for the x axis.
         QOpenGLBuffer xaxis_vertices;
         /// The vertices for the y axis.

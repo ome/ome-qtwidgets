@@ -110,6 +110,7 @@ namespace ome
                      ome::files::dimension_size_type                    series,
                      QObject                                                *parent):
         QObject(parent),
+        vertices(),
         grid_vertices(QOpenGLBuffer::VertexBuffer),
         grid_elements(QOpenGLBuffer::IndexBuffer),
         reader(reader),
@@ -193,6 +194,9 @@ namespace ome
                   }
               }
           }
+
+        vertices.create();
+        vertices.bind();
 
         grid_vertices.create();
         grid_vertices.setUsagePattern(QOpenGLBuffer::StaticDraw);

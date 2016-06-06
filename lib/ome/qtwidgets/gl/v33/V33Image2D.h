@@ -36,70 +36,76 @@
  * #L%
  */
 
-#include <ome/qtwidgets/gl/v20/V20Axis2D.h>
-#include <ome/qtwidgets/gl/Util.h>
+#ifndef OME_QTWIDGETS_GL_V33_V33IMAGE2D_H
+#define OME_QTWIDGETS_GL_V33_V33IMAGE2D_H
 
-#include <iostream>
+#include <QtCore/QObject>
+#include <QtGui/QOpenGLBuffer>
+#include <QtGui/QOpenGLShader>
+
+#include <ome/files/Types.h>
+#include <ome/files/FormatReader.h>
+
+#include <ome/qtwidgets/gl/Image2D.h>
+#include <ome/qtwidgets/glsl/v330/V330GLImageShader2D.h>
 
 namespace ome
 {
   namespace qtwidgets
   {
+    /// OpenGL rendering.
     namespace gl
     {
-      namespace v20
+      /// OpenGL v2.0 (compatibility profile).
+      namespace v33
       {
 
-        Axis2D::Axis2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
-                       ome::files::dimension_size_type                    series,
-                       QObject                                                *parent):
-          gl::Axis2D(reader, series, parent),
-          axis_shader(new glsl::v110::GLFlatShader2D(this))
+        /**
+         * 2D (xy) image renderer.
+         *
+         * Draws the specified image, using a user-selectable plane.
+         *
+         * The render is greyscale with a per-channel min/max for linear
+         * contrast.
+         */
+        class Image2D : public gl::Image2D
         {
-        }
+          Q_OBJECT
 
-        Axis2D::~Axis2D()
-        {
-        }
+        public:
+          /**
+           * Create a 2D image.
+           *
+           * The size and position will be taken from the specified image.
+           *
+           * @param reader the image reader.
+           * @param series the image series.
+           * @param parent the parent of this object.
+           */
+          explicit Image2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+                           ome::files::dimension_size_type                    series,
+                           QObject                                           *parent = 0);
 
-        void
-        Axis2D::render(const glm::mat4& mvp)
-        {
-          axis_shader->bind();
+          /// Destructor.
+          virtual ~Image2D();
 
-          // Render x axis
-          axis_shader->setModelViewProjection(mvp);
-          axis_shader->setColour(glm::vec4(1.0, 0.0, 0.0, 1.0));
-          axis_shader->setOffset(glm::vec2(0.0, -40.0));
-          axis_shader->enableCoords();
-          axis_shader->setCoords(xaxis_vertices, 0, 2, 0);
+          void
+          render(const glm::mat4& mvp);
 
-          // Push each element to the vertex shader
-          axis_elements.bind();
-          glDrawElements(GL_TRIANGLES, axis_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-          check_gl("Axis X draw elements");
-
-          axis_shader->disableCoords();
-
-          // Render y axis
-          axis_shader->bind();
-          axis_shader->setModelViewProjection(mvp);
-          axis_shader->setColour(glm::vec4(0.0, 1.0, 0.0, 1.0));
-          axis_shader->setOffset(glm::vec2(-40.0, 0.0));
-          axis_shader->enableCoords();
-          axis_shader->setCoords(yaxis_vertices, 0, 2, 0);
-
-          // Push each element to the vertex shader
-          axis_elements.bind();
-          glDrawElements(GL_TRIANGLES, axis_elements.size()/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-          check_gl("Axis Y draw elements");
-
-          axis_shader->disableCoords();
-
-          axis_shader->release();
-        }
+        private:
+          /// The shader program for image rendering.
+          glsl::v330::GLImageShader2D *image_shader;
+        };
 
       }
     }
   }
 }
+
+#endif // OME_QTWIDGETS_GL_V33_V33IMAGE2D_H
+
+/*
+ * Local Variables:
+ * mode:C++
+ * End:
+ */

@@ -85,25 +85,25 @@ if (OME_QTOPENGL)
       gl/Image2D.h
       gl/Util.h)
 
-  set(QTWIDGETS_GL_V20_SOURCES
-      gl/v20/V20Axis2D.cpp
-      gl/v20/V20Grid2D.cpp
-      gl/v20/V20Image2D.cpp)
+  set(QTWIDGETS_GL_V33_SOURCES
+      gl/v33/V33Axis2D.cpp
+      gl/v33/V33Grid2D.cpp
+      gl/v33/V33Image2D.cpp)
 
-  set(QTWIDGETS_GL_V20_HEADERS
-      gl/v20/V20Axis2D.h
-      gl/v20/V20Grid2D.h
-      gl/v20/V20Image2D.h)
+  set(QTWIDGETS_GL_V33_HEADERS
+      gl/v33/V33Axis2D.h
+      gl/v33/V33Grid2D.h
+      gl/v33/V33Image2D.h)
 
-  set(QTWIDGETS_GLSL_V110_SOURCES
-      glsl/v110/GLFlatShader2D.cpp
-      glsl/v110/GLImageShader2D.cpp
-      glsl/v110/GLLineShader2D.cpp)
+  set(QTWIDGETS_GLSL_V330_SOURCES
+      glsl/v330/V330GLFlatShader2D.cpp
+      glsl/v330/V330GLImageShader2D.cpp
+      glsl/v330/V330GLLineShader2D.cpp)
 
-  set(QTWIDGETS_GLSL_V110_HEADERS
-      glsl/v110/GLFlatShader2D.h
-      glsl/v110/GLImageShader2D.h
-      glsl/v110/GLLineShader2D.h)
+  set(QTWIDGETS_GLSL_V330_HEADERS
+      glsl/v330/V330GLFlatShader2D.h
+      glsl/v330/V330GLImageShader2D.h
+      glsl/v330/V330GLLineShader2D.h)
 
   add_library(ome-qtwidgets
               ${QTWIDGETS_SOURCES}
@@ -111,10 +111,10 @@ if (OME_QTOPENGL)
               ${OME_QTWIDGETS_GENERATED_PRIVATE_HEADERS}
               ${QTWIDGETS_GL_SOURCES}
               ${QTWIDGETS_GL_HEADERS}
-              ${QTWIDGETS_GL_V20_SOURCES}
-              ${QTWIDGETS_GL_V20_HEADERS}
-              ${QTWIDGETS_GLSL_V110_SOURCES}
-              ${QTWIDGETS_GLSL_V110_HEADERS}
+              ${QTWIDGETS_GL_V33_SOURCES}
+              ${QTWIDGETS_GL_V33_HEADERS}
+              ${QTWIDGETS_GLSL_V330_SOURCES}
+              ${QTWIDGETS_GLSL_V330_HEADERS}
               ${ome-qtwidgets_HEADERS_MOC}
               ${ome-qtwidgets_RESOURCES})
   qt5_use_modules(ome-qtwidgets Core Gui Widgets Svg)
@@ -140,10 +140,10 @@ if (OME_QTOPENGL)
           DESTINATION ${ome_qtwidgets_includedir})
   install(FILES ${OME_QTWIDGETS_GL__HEADERS}
           DESTINATION ${ome_qtwidgets_includedir}/gl)
-  install(FILES ${OME_QTWIDGETS_GL_V20_HEADERS}
-          DESTINATION ${ome_qtwidgets_includedir}/gl/v20)
-  install(FILES ${OME_QTWIDGETS_GLSL_V110_HEADERS}
-          DESTINATION ${ome_qtwidgets_includedir}/glsl/v110)
+  install(FILES ${OME_QTWIDGETS_GL_V33_HEADERS}
+          DESTINATION ${ome_qtwidgets_includedir}/gl/v33)
+  install(FILES ${OME_QTWIDGETS_GLSL_V330_HEADERS}
+          DESTINATION ${ome_qtwidgets_includedir}/glsl/v330)
 
   # Dump header list for testing
   header_include_list_write(QTWIDGETS_HEADERS "" ome/qtwidgets ${PROJECT_BINARY_DIR}/test/ome-qtwidgets)

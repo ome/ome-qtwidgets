@@ -37,7 +37,7 @@
  */
 
 #include <ome/qtwidgets/glm.h>
-#include <ome/qtwidgets/glsl/v110/GLFlatShader2D.h>
+#include <ome/qtwidgets/glsl/v330/V330GLLineShader2D.h>
 #include <ome/qtwidgets/gl/Util.h>
 
 #include <iostream>
@@ -50,51 +50,64 @@ namespace ome
   {
     namespace glsl
     {
-      namespace v110
+      namespace v330
       {
 
-        GLFlatShader2D::GLFlatShader2D(QObject *parent):
+        GLLineShader2D::GLLineShader2D(QObject *parent):
           QOpenGLShaderProgram(parent),
           vshader(),
           fshader(),
           attr_coords(),
-          uniform_colour(),
-          uniform_offset(),
+          attr_colour(),
           uniform_mvp()
         {
           initializeOpenGLFunctions();
 
           vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
           vshader->compileSourceCode
-            ("#version 110\n"
+            ("#version 330 core\n"
              "\n"
-             "attribute vec2 coord2d;\n"
-             "varying vec4 f_colour;\n"
-             "uniform vec4 colour;\n"
-             "uniform vec2 offset;\n"
              "uniform mat4 mvp;\n"
+             "uniform float zoom;\n"
+             "\n"
+             "layout (location = 0) in vec3 coord2d;\n"
+             "layout (location = 1) in vec3 colour;\n"
+             "out VertexData\n"
+             "{\n"
+             "  vec4 f_colour;\n"
+             "} outData;\n"
+             "\n"
+             "void log10(in float v1, out float v2) { v2 = log2(v1) * 0.30103; }\n"
              "\n"
              "void main(void) {\n"
-             "  gl_Position = mvp * vec4(coord2d+offset, 2.0, 1.0);\n"
-             "  f_colour = colour;\n"
+             "  gl_Position = mvp * vec4(coord2d[0], coord2d[1], -2.0, 1.0);\n"
+             "  // Logistic function offset by LOD and correction factor to set the transition points\n"
+             "  float logzoom;\n"
+             "  log10(zoom, logzoom);\n"
+             "  outData.f_colour = vec4(colour, 1.0 / (1.0 + pow(10.0,((-logzoom-1.0+coord2d[2])*30.0))));\n"
              "}\n");
           if (!vshader->isCompiled())
             {
-              std::cerr << "Failed to compile vertex shader\n" << vshader->log().toStdString() << std::endl;
+              std::cerr << "V330GLLineShader2D: Failed to compile vertex shader\n" << vshader->log().toStdString() << std::endl;
             }
 
           fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
           fshader->compileSourceCode
-            ("#version 110\n"
+            ("#version 330 core\n"
              "\n"
-             "varying vec4 f_colour;\n"
+             "in VertexData\n"
+             "{\n"
+             "  vec4 f_colour;\n"
+             "} inData;\n"
+             "\n"
+             "out vec4 outputColour;\n"
              "\n"
              "void main(void) {\n"
-             "  gl_FragColor = f_colour;\n"
+             "  outputColour = inData.f_colour;\n"
              "}\n");
           if (!fshader->isCompiled())
             {
-              std::cerr << "Failed to compile fragment shader\n" << fshader->log().toStdString() << std::endl;
+              std::cerr << "V330GLLineShader2D: Failed to compile fragment shader\n" << fshader->log().toStdString() << std::endl;
             }
 
           addShader(vshader);
@@ -103,51 +116,55 @@ namespace ome
 
           if (!isLinked())
             {
-              std::cerr << "Failed to link shader program\n" << log().toStdString() << std::endl;
+              std::cerr << "V330GLLineShader2D: Failed to link shader program\n" << log().toStdString() << std::endl;
             }
 
           attr_coords = attributeLocation("coord2d");
           if (attr_coords == -1)
-            std::cerr << "Failed to bind coordinate location" << std::endl;
+            std::cerr << "V330GLLineShader2D: Failed to bind coordinate location" << std::endl;
 
-          uniform_colour = uniformLocation("colour");
-          if (uniform_colour == -1)
-            std::cerr << "Failed to bind transform" << std::endl;
-
-          uniform_offset = uniformLocation("offset");
-          if (uniform_offset == -1)
-            std::cerr << "Failed to bind offset" << std::endl;
+          attr_colour = attributeLocation("colour");
+          if (attr_coords == -1)
+            std::cerr << "V330GLLineShader2D: Failed to bind colour location" << std::endl;
 
           uniform_mvp = uniformLocation("mvp");
           if (uniform_mvp == -1)
-            std::cerr << "Failed to bind transform" << std::endl;
+            std::cerr << "V330GLLineShader2D: Failed to bind transform" << std::endl;
+
+          uniform_zoom = uniformLocation("zoom");
+          if (uniform_zoom == -1)
+            std::cerr << "V330GLLineShader2D: Failed to bind zoom factor" << std::endl;
         }
 
-        GLFlatShader2D::~GLFlatShader2D()
+        GLLineShader2D::~GLLineShader2D()
         {
         }
 
         void
-        GLFlatShader2D::enableCoords()
+        GLLineShader2D::enableCoords()
         {
           enableAttributeArray(attr_coords);
         }
 
         void
-        GLFlatShader2D::disableCoords()
+        GLLineShader2D::disableCoords()
         {
           disableAttributeArray(attr_coords);
         }
 
         void
-        GLFlatShader2D::setCoords(const GLfloat *offset, int tupleSize, int stride)
+        GLLineShader2D::setCoords(const GLfloat *offset,
+                                  int            tupleSize,
+                                  int            stride)
         {
           setAttributeArray(attr_coords, offset, tupleSize, stride);
-          check_gl("Set flatcoords");
         }
 
         void
-        GLFlatShader2D::setCoords(QOpenGLBuffer& coords, const GLfloat *offset, int tupleSize, int stride)
+        GLLineShader2D::setCoords(QOpenGLBuffer& coords,
+                                  const GLfloat *offset,
+                                  int            tupleSize,
+                                  int            stride)
         {
           coords.bind();
           setCoords(offset, tupleSize, stride);
@@ -155,24 +172,48 @@ namespace ome
         }
 
         void
-        GLFlatShader2D::setColour(const glm::vec4& colour)
+        GLLineShader2D::enableColour()
         {
-          glUniform4fv(uniform_colour, 1, glm::value_ptr(colour));
-          check_gl("Set flat uniform colour");
+          enableAttributeArray(attr_colour);
         }
 
         void
-        GLFlatShader2D::setOffset(const glm::vec2& offset)
+        GLLineShader2D::disableColour()
         {
-          glUniform2fv(uniform_offset, 1, glm::value_ptr(offset));
-          check_gl("Set flat uniform offset");
+          disableAttributeArray(attr_colour);
         }
 
         void
-        GLFlatShader2D::setModelViewProjection(const glm::mat4& mvp)
+        GLLineShader2D::setColour(const GLfloat *offset,
+                                  int            tupleSize,
+                                  int            stride)
+        {
+          setAttributeArray(attr_colour, offset, tupleSize, stride);
+        }
+
+        void
+        GLLineShader2D::setColour(QOpenGLBuffer&  colour,
+                                  const GLfloat  *offset,
+                                  int             tupleSize,
+                                  int             stride)
+        {
+          colour.bind();
+          setColour(offset, tupleSize, stride);
+          colour.release();
+        }
+
+        void
+        GLLineShader2D::setModelViewProjection(const glm::mat4& mvp)
         {
           glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
-          check_gl("Set flat uniform mvp");
+          check_gl("Set line uniform mvp");
+        }
+
+        void
+        GLLineShader2D::setZoom(float zoom)
+        {
+          glUniform1f(uniform_zoom, zoom);
+          check_gl("Set line zoom level");
         }
 
       }

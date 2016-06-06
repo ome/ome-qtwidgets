@@ -36,10 +36,13 @@
  * #L%
  */
 
-#include <view/Window.h>
-
+// Include first to avoid clash with Windows headers pulled in via
+// QtCore/qt_windows.h; they define VOID and HALFTONE which clash with
+// the TIFF enums.
 #include <ome/files/FormatReader.h>
 #include <ome/files/in/OMETIFFReader.h>
+
+#include <view/Window.h>
 
 #include <ome/compat/memory.h>
 
@@ -98,7 +101,7 @@ namespace view
     viewResetAction = new QAction(tr("&Reset"), this);
     viewResetAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_R));
     viewResetAction->setStatusTip(tr("Reset the current view"));
-    QIcon reset_icon(QString((iconpath / "actions/ome-reset2d.svg").c_str()));
+    QIcon reset_icon(QString((iconpath / "actions/ome-reset2d.svg").string().c_str()));
     viewResetAction->setIcon(reset_icon);
     viewResetAction->setEnabled(false);
     connect(viewResetAction, SIGNAL(triggered()), this, SLOT(view_reset()));
@@ -107,7 +110,7 @@ namespace view
     viewZoomAction->setCheckable(true);
     viewZoomAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Z));
     viewZoomAction->setStatusTip(tr("Zoom the current view"));
-    QIcon zoom_icon(QString((iconpath / "actions/ome-zoom2d.svg").c_str()));
+    QIcon zoom_icon(QString((iconpath / "actions/ome-zoom2d.svg").string().c_str()));
     viewZoomAction->setIcon(zoom_icon);
     viewZoomAction->setEnabled(false);
     connect(viewZoomAction, SIGNAL(triggered()), this, SLOT(view_zoom()));
@@ -116,7 +119,7 @@ namespace view
     viewPanAction->setCheckable(true);
     viewPanAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P));
     viewPanAction->setStatusTip(tr("Pan the current view"));
-    QIcon pan_icon(QString((iconpath / "actions/ome-pan2d.svg").c_str()));
+    QIcon pan_icon(QString((iconpath / "actions/ome-pan2d.svg").string().c_str()));
     viewPanAction->setIcon(pan_icon);
     viewPanAction->setEnabled(false);
     connect(viewPanAction, SIGNAL(triggered()), this, SLOT(view_pan()));
@@ -125,7 +128,7 @@ namespace view
     viewRotateAction->setCheckable(true);
     viewRotateAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_T));
     viewRotateAction->setStatusTip(tr("Rotate the current view"));
-    QIcon rotate_icon(QString((iconpath / "actions/ome-rotate2d.svg").c_str()));
+    QIcon rotate_icon(QString((iconpath / "actions/ome-rotate2d.svg").string().c_str()));
     viewRotateAction->setIcon(rotate_icon);
     viewRotateAction->setEnabled(false);
     connect(viewRotateAction, SIGNAL(triggered()), this, SLOT(view_rotate()));

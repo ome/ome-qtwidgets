@@ -163,7 +163,7 @@ namespace
    * If OpenGL limitations require
    */
   struct GLSetBufferVisitor : public boost::static_visitor<>,
-                              protected QOpenGLFunctions
+                              protected QOpenGLFunctions_3_3_Core
   {
     unsigned int textureid;
     TextureProperties tprop;
@@ -277,6 +277,7 @@ namespace ome
                        ome::files::dimension_size_type                    series,
                        QObject                                                *parent):
         QObject(parent),
+        vertices(),
         image_vertices(QOpenGLBuffer::VertexBuffer),
         image_texcoords(QOpenGLBuffer::VertexBuffer),
         image_elements(QOpenGLBuffer::IndexBuffer),
@@ -382,6 +383,10 @@ namespace ome
           xlim[1], ylim[1],
           xlim[0], ylim[1]
         };
+
+        if (!vertices.isCreated())
+          vertices.create();
+        vertices.bind();
 
         if (!image_vertices.isCreated())
           image_vertices.create();

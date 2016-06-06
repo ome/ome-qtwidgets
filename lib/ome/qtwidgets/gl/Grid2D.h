@@ -40,9 +40,10 @@
 #define OME_QTWIDGETS_GL_GRID2D_H
 
 #include <QtCore/QObject>
+#include <QtGui/QOpenGLVertexArrayObject>
 #include <QtGui/QOpenGLBuffer>
 #include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_3_Core>
 
 #include <ome/files/Types.h>
 #include <ome/files/FormatReader.h>
@@ -64,7 +65,7 @@ namespace ome
        * Draws x and y gridlines for the specified image.
        */
       class Grid2D : public QObject,
-                     protected QOpenGLFunctions
+                     protected QOpenGLFunctions_3_3_Core
       {
         Q_OBJECT
 
@@ -122,6 +123,8 @@ namespace ome
         setSize(const glm::vec2& xlim,
                 const glm::vec2& ylim);
 
+        /// The vertex array.
+        QOpenGLVertexArrayObject vertices;
         /// The vertices for the grid.
         QOpenGLBuffer grid_vertices;
         /// The elements for the grid.

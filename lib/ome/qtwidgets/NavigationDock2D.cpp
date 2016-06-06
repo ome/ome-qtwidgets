@@ -43,11 +43,6 @@
 #include <ome/qtwidgets/NavigationDock2D.h>
 #include <ome/qtwidgets/gl/Util.h>
 
-#include <ome/qtwidgets/glm.h>
-#include <ome/qtwidgets/gl/v20/V20Image2D.h>
-#include <ome/qtwidgets/gl/v20/V20Grid2D.h>
-#include <ome/qtwidgets/gl/v20/V20Axis2D.h>
-
 #include <iostream>
 
 #include <QtWidgets/QGridLayout>

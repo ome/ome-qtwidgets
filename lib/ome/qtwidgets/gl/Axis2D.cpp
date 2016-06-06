@@ -52,6 +52,7 @@ namespace ome
                      ome::files::dimension_size_type                    series,
                      QObject                                                *parent):
         QObject(parent),
+        vertices(),
         xaxis_vertices(QOpenGLBuffer::VertexBuffer),
         yaxis_vertices(QOpenGLBuffer::VertexBuffer),
         axis_elements(QOpenGLBuffer::IndexBuffer),
@@ -113,6 +114,9 @@ namespace ome
           xoff+smid+(arrowwid/2.0f), ylim[1]-arrowlen,
           xoff+smid, ylim[1]
         };
+
+        vertices.create();
+        vertices.bind();
 
         xaxis_vertices.create();
         xaxis_vertices.setUsagePattern(QOpenGLBuffer::StaticDraw);

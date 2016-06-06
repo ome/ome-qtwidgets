@@ -36,19 +36,18 @@
  * #L%
  */
 
-#ifndef OME_QTWIDGETS_GL_V20_V20GRID2D_H
-#define OME_QTWIDGETS_GL_V20_V20GRID2D_H
+#ifndef OME_QTWIDGETS_GL_V33_V33GRID2D_H
+#define OME_QTWIDGETS_GL_V33_V33GRID2D_H
 
 #include <QtCore/QObject>
 #include <QtGui/QOpenGLBuffer>
 #include <QtGui/QOpenGLShader>
-#include <QtGui/QOpenGLFunctions>
 
 #include <ome/files/Types.h>
 #include <ome/files/FormatReader.h>
 
 #include <ome/qtwidgets/gl/Grid2D.h>
-#include <ome/qtwidgets/glsl/v110/GLLineShader2D.h>
+#include <ome/qtwidgets/glsl/v330/V330GLLineShader2D.h>
 
 namespace ome
 {
@@ -56,7 +55,7 @@ namespace ome
   {
     namespace gl
     {
-      namespace v20
+      namespace v33
       {
 
         /**
@@ -80,7 +79,7 @@ namespace ome
            */
           explicit Grid2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
                           ome::files::dimension_size_type                    series,
-                          QObject                                                *parent = 0);
+                          QObject                                           *parent = 0);
 
           /// Destructor.
           ~Grid2D();
@@ -99,7 +98,7 @@ namespace ome
 
         private:
           /// The shader program for grid shading.
-          glsl::v110::GLLineShader2D *grid_shader;
+          glsl::v330::GLLineShader2D *grid_shader;
         };
 
       }
@@ -107,7 +106,7 @@ namespace ome
   }
 }
 
-#endif // OME_QTWIDGETS_GL_V20_V20GRID2D_H
+#endif // OME_QTWIDGETS_GL_V33_V33GRID2D_H
 
 /*
  * Local Variables:
