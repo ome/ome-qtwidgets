@@ -132,13 +132,13 @@ namespace
           min_filter = GL_NEAREST_MIPMAP_LINEAR;
           mag_filter = GL_NEAREST;
           break;
-        case ::ome::xml::model::enums::PixelType::COMPLEX:
+        case ::ome::xml::model::enums::PixelType::COMPLEXFLOAT:
           internal_format = GL_RG32F;
           if (!GL_ARB_texture_float)
             internal_format = GL_RG16;
           external_type = GL_FLOAT;
           external_format = GL_RG;
-        case ::ome::xml::model::enums::PixelType::DOUBLECOMPLEX:
+        case ::ome::xml::model::enums::PixelType::COMPLEXDOUBLE:
           internal_format = GL_RG32F;
           if (!GL_ARB_texture_float)
             internal_format = GL_RG16;
