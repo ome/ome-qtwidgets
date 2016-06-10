@@ -293,8 +293,8 @@ namespace ome
 
     /// Properties of COMPLEX texels.
     template<>
-    struct TexelProperties< ::ome::xml::model::enums::PixelType::COMPLEX> :
-      public ome::files::PixelProperties< ::ome::xml::model::enums::PixelType::COMPLEX>
+    struct TexelProperties< ::ome::xml::model::enums::PixelType::COMPLEXFLOAT> :
+      public ome::files::PixelProperties< ::ome::xml::model::enums::PixelType::COMPLEXFLOAT>
     {
       /// Internal pixel format (double 32-bit float channels).
       static const GLenum internal_format = GL_RG32F;
@@ -303,7 +303,7 @@ namespace ome
       /// External pixel type (@c std::complex<float>).
       static const GLint external_type = GL_FLOAT;
       /// External pixel format fallback.
-      static const ::ome::xml::model::enums::PixelType::enum_value fallback_pixeltype = ome::xml::model::enums::PixelType::COMPLEX;
+      static const ::ome::xml::model::enums::PixelType::enum_value fallback_pixeltype = ome::xml::model::enums::PixelType::COMPLEXFLOAT;
       /// OME-Files type matches the GL type exactly.
       static const bool conversion_required = false;
       /// Pixel values are automatically normalized by GL.
@@ -316,8 +316,8 @@ namespace ome
 
     /// Properties of DOUBLECOMPLEX texels.
     template<>
-    struct TexelProperties< ::ome::xml::model::enums::PixelType::DOUBLECOMPLEX> :
-      public ome::files::PixelProperties< ::ome::xml::model::enums::PixelType::DOUBLECOMPLEX>
+    struct TexelProperties< ::ome::xml::model::enums::PixelType::COMPLEXDOUBLE> :
+      public ome::files::PixelProperties< ::ome::xml::model::enums::PixelType::COMPLEXDOUBLE>
     {
       /// Internal pixel format (double 32-bit float channels; note precision loss).
       static const GLenum internal_format = GL_RG32F;
@@ -326,7 +326,7 @@ namespace ome
       /// External pixel type (@c std::complex<double>).
       static const GLint external_type = GL_DOUBLE;
       /// External pixel format fallback.
-      static const ::ome::xml::model::enums::PixelType::enum_value fallback_pixeltype = ome::xml::model::enums::PixelType::COMPLEX;
+      static const ::ome::xml::model::enums::PixelType::enum_value fallback_pixeltype = ome::xml::model::enums::PixelType::COMPLEXFLOAT;
       /// OME-Files type matches the GL type exactly.
       static const bool conversion_required = false;
       /// Pixel values are automatically normalized by GL.
