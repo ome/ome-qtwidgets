@@ -1,9 +1,13 @@
+@PACKAGE_INIT@
+
 include(CMakeFindDependencyMacro)
-find_dependency(OME REQUIRED COMPONENTS Common XML Files)
+find_dependency(OMECommon REQUIRED)
+find_dependency(OMEXML REQUIRED)
+find_dependency(OMEFiles REQUIRED)
 find_dependency(Boost 1.46 REQUIRED COMPONENTS boost iostreams filesystem)
 find_dependency(TIFF REQUIRED)
 
 include(${CMAKE_CURRENT_LIST_DIR}/OMEQtWidgetsInternal.cmake)
 
 add_library(OME::QtWidgets INTERFACE IMPORTED)
-set_target_properties(OME::QtWidgets PROPERTIES INTERFACE_LINK_LIBRARIES ome-files)
+set_target_properties(OME::QtWidgets PROPERTIES INTERFACE_LINK_LIBRARIES ome_qtwidgets_ome-qtwidgets)
