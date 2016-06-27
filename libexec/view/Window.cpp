@@ -51,7 +51,12 @@
 #include <ome/qtwidgets/GLContainer.h>
 #include <ome/qtwidgets/module.h>
 
-#include <QtWidgets>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QFileDialog>
 
 using namespace ome::qtwidgets;
 using ome::files::dimension_size_type;
