@@ -34,35 +34,39 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+if (OME_QTOPENGL)
 
-set(view_SOURCES
-    view.cpp
-    Window.cpp)
+  set(CMAKE_AUTOMOC ON)
+  set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(view_HEADERS
-    Window.h)
+  set(view_SOURCES
+      view.cpp
+      Window.cpp)
 
-add_executable(view
-               ${view_SOURCES}
-               ${view_HEADERS}
-               ${view_HEADERS_MOC}
-               ${view_RESOURCES})
+  set(view_HEADERS
+      Window.h)
 
-qt5_use_modules(view Core Gui Widgets Svg)
+  add_executable(view
+                 ${view_SOURCES}
+                 ${view_HEADERS}
+                 ${view_HEADERS_MOC}
+                 ${view_RESOURCES})
 
-target_include_directories(view PUBLIC
-                           $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libexec>
-                           $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/libexec>
-                           $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
-                           $<BUILD_INTERFACE:${GLM_INCLUDE_DIR}>)
+  qt5_use_modules(view Core Gui Widgets Svg)
 
-target_link_libraries(view OME::Files OME::QtWidgets)
+  target_include_directories(view PUBLIC
+                             $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libexec>
+                             $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/libexec>
+                             $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
+                             $<BUILD_INTERFACE:${GLM_INCLUDE_DIR}>)
 
-install(TARGETS view RUNTIME
-        DESTINATION ${OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR}
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                    GROUP_READ GROUP_EXECUTE
-                    WORLD_READ WORLD_EXECUTE
-        COMPONENT "runtime")
+  target_link_libraries(view OME::Files OME::QtWidgets)
+
+  install(TARGETS view RUNTIME
+          DESTINATION ${OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR}
+          PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                      GROUP_READ GROUP_EXECUTE
+                      WORLD_READ WORLD_EXECUTE
+          COMPONENT "runtime")
+
+endif()

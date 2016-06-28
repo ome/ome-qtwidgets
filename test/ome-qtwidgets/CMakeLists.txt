@@ -34,8 +34,12 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-if(extended-tests)
-  header_test_from_file(ome-qtwidgets ome-qtwidgets ome/qtwidgets)
-  qt5_use_modules(ome-qtwidgets-headers Core Gui Widgets Svg)
-  ome_files_add_test(ome-qtwidgets/headers ome-qtwidgets-headers)
-endif(extended-tests)
+if(OME_QTOPENGL AND BUILD_TESTS)
+
+  if(extended-tests)
+    header_test_from_file(ome-qtwidgets ome-qtwidgets ome/qtwidgets)
+    qt5_use_modules(ome-qtwidgets-headers Core Gui Widgets Svg)
+    ome_files_add_test(ome-qtwidgets/headers ome-qtwidgets-headers)
+  endif(extended-tests)
+
+endif()
