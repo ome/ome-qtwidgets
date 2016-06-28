@@ -34,21 +34,12 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-# Don't use old-style compile definitions
-if (POLICY CMP0043)
-  cmake_policy(SET CMP0043 NEW)
-endif(POLICY CMP0043)
-
 if(OME_QTOPENGL AND BUILD_TESTS)
-  include_directories(${OME_TOPLEVEL_INCLUDES}
-                      ${OPENGL_INCLUDE_DIR}
-                      ${TIFF_INCLUDE_DIR}
-                      ${GLM_INCLUDE_DIR}
-                      ${Qt5_INCLUDE_DIRS})
 
   if(extended-tests)
     header_test_from_file(ome-qtwidgets ome-qtwidgets ome/qtwidgets)
     qt5_use_modules(ome-qtwidgets-headers Core Gui Widgets Svg)
     ome_files_add_test(ome-qtwidgets/headers ome-qtwidgets-headers)
   endif(extended-tests)
+
 endif()

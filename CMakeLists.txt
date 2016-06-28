@@ -49,10 +49,12 @@ list(APPEND CMAKE_MODULE_PATH
 
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/BioFormatsCommon.cmake")
 
-project(ome-qtwidgets)
-
 include(cmake/Version.cmake)
-ome_project_version("OME Qt Widgets" "${CMAKE_CURRENT_SOURCE_DIR}")
+ome_project_version("OME QtWidgets C++" "${CMAKE_CURRENT_SOURCE_DIR}")
+
+project(ome-qtwidgets
+        VERSION "${OME_VERSION_MAJOR}.${OME_VERSION_MINOR}.${OME_VERSION_PATCH}"
+        LANGUAGES CXX)
 
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
   message(FATAL_ERROR "In-tree builds are not supported; please run cmake from a separate build directory.")
@@ -76,12 +78,14 @@ include(ThreadChecks)
 include(XercesChecks)
 include(XalanChecks)
 include(ImageLibraries)
-include(QtGLChecks)
 include(GTest)
 include(Doxygen)
 include(HeaderTest)
 
-find_package(OME 5.2.0 REQUIRED Compat Common XML Files)
+find_package(OMECompat 5.2.0 REQUIRED)
+find_package(OMECommon 5.2.0 REQUIRED)
+find_package(OMEXML 5.2.0 REQUIRED)
+find_package(OMEFiles 0.1.1 REQUIRED)
 
 if(MSVC)
   # Debug library suffix.

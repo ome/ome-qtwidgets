@@ -37,14 +37,9 @@ option(doxygen "Enable doxygen documentation" ${DOXYGEN_DEFAULT})
 set(BUILD_DOXYGEN ${doxygen})
 
 # Qt GUI
-find_package(Qt5 5.2.0 COMPONENTS Core Gui Widgets Svg)
-find_package(OpenGL)
-find_package(GLM)
-set(OME_QTOPENGL_DEFAULT OFF)
-if (Qt5Core_FOUND AND Qt5Gui_FOUND AND Qt5Widgets_FOUND AND Qt5Svg_FOUND AND OPENGL_FOUND AND GLM_FOUND)
-  set(OME_QTOPENGL_DEFAULT ON)
-endif()
-option(qtgui "Build Qt GUI widgets and image viewer" ${OME_QTOPENGL_DEFAULT})
+find_package(Qt5 5.2.0 REQUIRED COMPONENTS Core Gui Widgets Svg)
+find_package(OpenGL REQUIRED)
+find_package(GLM REQUIRED)
 
 # Sphinx documentation generator
 find_program(SPHINX_BUILD sphinx-build)

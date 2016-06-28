@@ -34,11 +34,6 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-# Don't use old-style compile definitions
-if (POLICY CMP0043)
-  cmake_policy(SET CMP0043 NEW)
-endif(POLICY CMP0043)
-
 if (OME_QTOPENGL)
 
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-internal.h.in
@@ -46,12 +41,6 @@ if (OME_QTOPENGL)
 
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-  include_directories(${OME_TOPLEVEL_INCLUDES}
-                      ${OPENGL_INCLUDE_DIR}
-                      ${TIFF_INCLUDE_DIR}
-                      ${GLM_INCLUDE_DIR}
-                      ${Qt5_INCLUDE_DIRS})
 
   set(QTWIDGETS_SOURCES
       GLContainer.cpp
@@ -118,32 +107,67 @@ if (OME_QTOPENGL)
               ${ome-qtwidgets_HEADERS_MOC}
               ${ome-qtwidgets_RESOURCES})
   qt5_use_modules(ome-qtwidgets Core Gui Widgets Svg)
+
+  target_include_directories(ome-qtwidgets PUBLIC
+                             $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+                             $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib>
+                             $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
+                             $<BUILD_INTERFACE:${GLM_INCLUDE_DIR}>)
+
   target_link_libraries(ome-qtwidgets OME::Files
                         Boost::filesystem
                         ${OPENGL_gl_LIBRARY} ${TIFF_LIBRARIES})
 
   set_target_properties(ome-qtwidgets PROPERTIES VERSION ${OME_VERSION_SHORT})
 
+  add_library(OME::QtWidgets ALIAS ome-qtwidgets)
+
+  if(WIN32)
+    set(ome_qtwidgets_config_dir "cmake")
+  else()
+    set(ome_qtwidgets_config_dir "${CMAKE_INSTALL_LIBDIR}/cmake/OMEQtWidgets")
+  endif()
+
   install(TARGETS ome-qtwidgets
           EXPORT OMEQtWidgetsInternal
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+          COMPONENT "runtime"
+          INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
   install(EXPORT OMEQtWidgetsInternal
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMEQtWidgets)
-  install(FILES OMEQtWidgetsConfig.cmake
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OMEQtWidgets)
+          DESTINATION "${ome_qtwidgets_config_dir}"
+          NAMESPACE "ome_qtwidgets_"
+          COMPONENT "development")
+
+  include(CMakePackageConfigHelpers)
+  configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/OMEQtWidgetsConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/OMEQtWidgetsConfig.cmake"
+    INSTALL_DESTINATION "${ome_qtwidgets_config_dir}")
+  write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/OMEQtWidgetsConfigVersion.cmake
+    VERSION "${PROJECT_VERSION}"
+    COMPATIBILITY SameMajorVersion)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/OMEQtWidgetsConfig.cmake
+                ${CMAKE_CURRENT_BINARY_DIR}/OMEQtWidgetsConfigVersion.cmake
+          DESTINATION "${ome_qtwidgets_config_dir}"
+          COMPONENT "development")
 
   set(ome_qtwidgets_includedir "${CMAKE_INSTALL_INCLUDEDIR}/ome/qtwidgets")
 
   install(FILES ${OME_QTWIDGETS_HEADERS}
-          DESTINATION ${ome_qtwidgets_includedir})
+          DESTINATION ${ome_qtwidgets_includedir}
+          COMPONENT "development")
   install(FILES ${OME_QTWIDGETS_GL__HEADERS}
-          DESTINATION ${ome_qtwidgets_includedir}/gl)
+          DESTINATION ${ome_qtwidgets_includedir}/gl
+          COMPONENT "development")
   install(FILES ${OME_QTWIDGETS_GL_V33_HEADERS}
-          DESTINATION ${ome_qtwidgets_includedir}/gl/v33)
+          DESTINATION ${ome_qtwidgets_includedir}/gl/v33
+          COMPONENT "development")
   install(FILES ${OME_QTWIDGETS_GLSL_V330_HEADERS}
-          DESTINATION ${ome_qtwidgets_includedir}/glsl/v330)
+          DESTINATION ${ome_qtwidgets_includedir}/glsl/v330
+          COMPONENT "development")
 
   # Dump header list for testing
   header_include_list_write(QTWIDGETS_HEADERS "" ome/qtwidgets ${PROJECT_BINARY_DIR}/test/ome-qtwidgets)

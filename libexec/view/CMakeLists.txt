@@ -34,21 +34,10 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-# Don't use old-style compile definitions
-if (POLICY CMP0043)
-  cmake_policy(SET CMP0043 NEW)
-endif(POLICY CMP0043)
-
 if (OME_QTOPENGL)
 
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-  include_directories(${OME_TOPLEVEL_INCLUDES}
-                      ${OME_LIBEXEC_INCLUDES}
-                      ${OPENGL_INCLUDE_DIR}
-                      ${GLM_INCLUDE_DIR}
-                      ${Qt5_INCLUDE_DIRS})
 
   set(view_SOURCES
       view.cpp
@@ -62,14 +51,22 @@ if (OME_QTOPENGL)
                  ${view_HEADERS}
                  ${view_HEADERS_MOC}
                  ${view_RESOURCES})
-  qt5_use_modules(view Core Gui Widgets Svg)
-  target_link_libraries(view OME::Files ome-qtwidgets)
 
+  qt5_use_modules(view Core Gui Widgets Svg)
+
+  target_include_directories(view PUBLIC
+                             $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libexec>
+                             $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/libexec>
+                             $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
+                             $<BUILD_INTERFACE:${GLM_INCLUDE_DIR}>)
+
+  target_link_libraries(view OME::Files OME::QtWidgets)
 
   install(TARGETS view RUNTIME
           DESTINATION ${OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR}
           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
                       GROUP_READ GROUP_EXECUTE
-                      WORLD_READ WORLD_EXECUTE)
+                      WORLD_READ WORLD_EXECUTE
+          COMPONENT "runtime")
 
 endif()
