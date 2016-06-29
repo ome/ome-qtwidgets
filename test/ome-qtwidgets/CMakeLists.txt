@@ -34,7 +34,7 @@
 # policies, either expressed or implied, of any organization.
 # #L%
 
-if(OME_QTOPENGL AND BUILD_TESTS)
+if(BUILD_TESTS)
 
   if(extended-tests)
     header_test_from_file(ome-qtwidgets ome-qtwidgets ome/qtwidgets)
