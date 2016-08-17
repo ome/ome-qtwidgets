@@ -54,7 +54,7 @@ namespace ome
     /// OpenGL Shader Language (GLSL) program wrappers.
     namespace glsl
     {
-      /// GLSL v1.10 compatible.
+      /// GLSL v3.30 compatible.
       namespace v330
       {
 

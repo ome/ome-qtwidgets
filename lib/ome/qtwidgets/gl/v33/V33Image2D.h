@@ -56,7 +56,7 @@ namespace ome
     /// OpenGL rendering.
     namespace gl
     {
-      /// OpenGL v2.0 (compatibility profile).
+      /// OpenGL v3.3 (core profile).
       namespace v33
       {
 
