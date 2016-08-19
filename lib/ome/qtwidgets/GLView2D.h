@@ -51,6 +51,9 @@
 
 #include <QElapsedTimer>
 
+/**
+ * Open Microscopy Environment C++.
+ */
 namespace ome
 {
   /// Qt5 widgets for image display with OpenGL.
