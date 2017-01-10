@@ -39,9 +39,9 @@
 #ifndef OME_QTWIDGETS_GLVIEW2D_H
 #define OME_QTWIDGETS_GLVIEW2D_H
 
-#include <ome/files/FormatReader.h>
+#include <memory>
 
-#include <ome/compat/memory.h>
+#include <ome/files/FormatReader.h>
 
 #include <ome/qtwidgets/glm.h>
 #include <ome/qtwidgets/GLWindow.h>
@@ -85,7 +85,7 @@ namespace ome
        * @param series the image series.
        * @param parent the parent of this object.
        */
-      GLView2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+      GLView2D(std::shared_ptr<ome::files::FormatReader>  reader,
                ome::files::dimension_size_type                    series,
                QWidget                                                *parent = 0);
 
@@ -177,7 +177,7 @@ namespace ome
        *
        * @returns the reader.
        */
-      ome::compat::shared_ptr<ome::files::FormatReader>
+      std::shared_ptr<ome::files::FormatReader>
       getReader();
 
       /**
@@ -458,7 +458,7 @@ namespace ome
       /// Grid to render.
       gl::Grid2D *grid;
       /// The image reader.
-      ome::compat::shared_ptr<ome::files::FormatReader> reader;
+      std::shared_ptr<ome::files::FormatReader> reader;
       /// The image series.
       ome::files::dimension_size_type series;
     };

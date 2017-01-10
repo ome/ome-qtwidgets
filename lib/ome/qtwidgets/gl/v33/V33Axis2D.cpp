@@ -50,7 +50,7 @@ namespace ome
       namespace v33
       {
 
-        Axis2D::Axis2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+        Axis2D::Axis2D(std::shared_ptr<ome::files::FormatReader>  reader,
                        ome::files::dimension_size_type                    series,
                        QObject                                           *parent):
           gl::Axis2D(reader, series, parent),

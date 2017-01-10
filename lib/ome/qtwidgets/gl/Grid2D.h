@@ -39,6 +39,8 @@
 #ifndef OME_QTWIDGETS_GL_GRID2D_H
 #define OME_QTWIDGETS_GL_GRID2D_H
 
+#include <memory>
+
 #include <QtCore/QObject>
 #include <QtGui/QOpenGLVertexArrayObject>
 #include <QtGui/QOpenGLBuffer>
@@ -47,8 +49,6 @@
 
 #include <ome/files/Types.h>
 #include <ome/files/FormatReader.h>
-
-#include <ome/compat/memory.h>
 
 #include <ome/qtwidgets/glm.h>
 
@@ -79,7 +79,7 @@ namespace ome
          * @param series the image series.
          * @param parent the parent of this object.
          */
-        explicit Grid2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+        explicit Grid2D(std::shared_ptr<ome::files::FormatReader>  reader,
                         ome::files::dimension_size_type                    series,
                         QObject                                                *parent = 0);
 
@@ -130,7 +130,7 @@ namespace ome
         /// The elements for the grid.
         QOpenGLBuffer grid_elements;
         /// The image reader.
-        ome::compat::shared_ptr<ome::files::FormatReader> reader;
+        std::shared_ptr<ome::files::FormatReader> reader;
         /// The image series.
         ome::files::dimension_size_type series;
       };
