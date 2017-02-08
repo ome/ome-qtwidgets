@@ -48,7 +48,7 @@ namespace ome
     namespace gl
     {
 
-      Axis2D::Axis2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+      Axis2D::Axis2D(std::shared_ptr<ome::files::FormatReader>  reader,
                      ome::files::dimension_size_type                    series,
                      QObject                                                *parent):
         QObject(parent),
@@ -91,7 +91,8 @@ namespace ome
         GLfloat xoff(static_cast<GLfloat>(soff[0]));
         GLfloat yoff(static_cast<GLfloat>(soff[1]));
 
-        GLfloat xaxis_vertices_a[] = {
+        const std::array<GLfloat, 14> xaxis_vertices_a
+        {
           // Arrow shaft
           xlim[0], yoff+slim[0],
           xlim[1]-arrowlen, yoff+slim[0],
@@ -103,7 +104,8 @@ namespace ome
           xlim[1], yoff+smid
         };
 
-        GLfloat yaxis_vertices_a[] = {
+        const std::array<GLfloat, 14> yaxis_vertices_a
+        {
           // Arrow shaft
           xoff+slim[1], ylim[0],
           xoff+slim[1], ylim[1]-arrowlen,
@@ -121,14 +123,15 @@ namespace ome
         xaxis_vertices.create();
         xaxis_vertices.setUsagePattern(QOpenGLBuffer::StaticDraw);
         xaxis_vertices.bind();
-        xaxis_vertices.allocate(xaxis_vertices_a, sizeof(xaxis_vertices_a));
+        xaxis_vertices.allocate(xaxis_vertices_a.data(), sizeof(GLfloat) * xaxis_vertices_a.size());
 
         yaxis_vertices.create();
         yaxis_vertices.setUsagePattern(QOpenGLBuffer::StaticDraw);
         yaxis_vertices.bind();
-        yaxis_vertices.allocate(yaxis_vertices_a, sizeof(yaxis_vertices_a));
+        yaxis_vertices.allocate(yaxis_vertices_a.data(), sizeof(GLfloat) * yaxis_vertices_a.size());
 
-        GLushort axis_elements_a[] = {
+        std::array<GLushort, 9> axis_elements_a
+        {
           // Arrow shaft
           0,  1,  2,
           2,  3,  0,
@@ -139,7 +142,7 @@ namespace ome
         axis_elements.create();
         axis_elements.setUsagePattern(QOpenGLBuffer::StaticDraw);
         axis_elements.bind();
-        axis_elements.allocate(axis_elements_a, sizeof(axis_elements_a));
+        axis_elements.allocate(axis_elements_a.data(), sizeof(GLushort) * axis_elements_a.size());
       }
 
     }

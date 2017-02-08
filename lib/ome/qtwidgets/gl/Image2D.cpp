@@ -257,7 +257,7 @@ namespace
     typename boost::enable_if_c<
       boost::is_complex<T>::value, void
       >::type
-    operator() (const ome::compat::shared_ptr<PixelBuffer<T> >& v)
+    operator() (const std::shared_ptr<PixelBuffer<T>>& /* v */)
     {
       /// @todo Conversion from complex.
     }
@@ -273,7 +273,7 @@ namespace ome
     namespace gl
     {
 
-      Image2D::Image2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+      Image2D::Image2D(std::shared_ptr<ome::files::FormatReader>  reader,
                        ome::files::dimension_size_type                    series,
                        QObject                                                *parent):
         QObject(parent),
@@ -377,7 +377,8 @@ namespace ome
       Image2D::setSize(const glm::vec2& xlim,
                        const glm::vec2& ylim)
       {
-        GLfloat square_vertices[] = {
+        const std::array<GLfloat, 8> square_vertices
+        {
           xlim[0], ylim[0],
           xlim[1], ylim[0],
           xlim[1], ylim[1],
@@ -392,11 +393,12 @@ namespace ome
           image_vertices.create();
         image_vertices.setUsagePattern(QOpenGLBuffer::StaticDraw);
         image_vertices.bind();
-        image_vertices.allocate(square_vertices, sizeof(square_vertices));
+        image_vertices.allocate(square_vertices.data(), sizeof(GLfloat) * square_vertices.size());
 
         glm::vec2 texxlim(0.0, 1.0);
         glm::vec2 texylim(0.0, 1.0);
-        GLfloat square_texcoords[] = {
+        std::array<GLfloat, 8> square_texcoords
+        {
           texxlim[0], texylim[0],
           texxlim[1], texylim[0],
           texxlim[1], texylim[1],
@@ -407,9 +409,10 @@ namespace ome
           image_texcoords.create();
         image_texcoords.setUsagePattern(QOpenGLBuffer::StaticDraw);
         image_texcoords.bind();
-        image_texcoords.allocate(square_texcoords, sizeof(square_texcoords));
+        image_texcoords.allocate(square_texcoords.data(), sizeof(GLfloat) * square_texcoords.size());
 
-        GLushort square_elements[] = {
+        std::array<GLushort, 6> square_elements
+        {
           // front
           0,  1,  2,
           2,  3,  0
@@ -419,7 +422,7 @@ namespace ome
           image_elements.create();
         image_elements.setUsagePattern(QOpenGLBuffer::StaticDraw);
         image_elements.bind();
-        image_elements.allocate(square_elements, sizeof(square_elements));
+        image_elements.allocate(square_elements.data(), sizeof(GLushort) * square_elements.size());
       }
 
       void

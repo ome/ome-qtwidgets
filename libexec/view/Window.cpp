@@ -42,9 +42,9 @@
 #include <ome/files/FormatReader.h>
 #include <ome/files/in/OMETIFFReader.h>
 
-#include <view/Window.h>
+#include <memory>
 
-#include <ome/compat/memory.h>
+#include <view/Window.h>
 
 #include <ome/common/module.h>
 
@@ -245,7 +245,7 @@ namespace view
     QFileInfo info(file);
     if (info.exists())
       {
-        ome::compat::shared_ptr<ome::files::FormatReader> reader(ome::compat::make_shared<ome::files::in::OMETIFFReader>());
+        std::shared_ptr<ome::files::FormatReader> reader(std::make_shared<ome::files::in::OMETIFFReader>());
         reader->setId(file.toStdString());
         GLView2D *newGlView = new GLView2D(reader, 0, this);
         QWidget *glContainer = new GLContainer(this, newGlView);
@@ -293,7 +293,7 @@ namespace view
       }
     else
       {
-        navigation->setReader(ome::compat::shared_ptr<ome::files::FormatReader>(), 0, 0);
+        navigation->setReader(std::shared_ptr<ome::files::FormatReader>(), 0, 0);
       }
 
     bool enable(newGlView != 0);

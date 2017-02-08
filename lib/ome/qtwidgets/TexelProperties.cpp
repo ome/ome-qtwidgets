@@ -54,7 +54,7 @@ namespace ome
 
 #define INTERNALFORMAT_CASE(maR, maProperty, maType)                    \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          internal_format = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::internal_format; \
+          internal_format = TexelProperties<::ome::xml::model::enums::PixelType::maType>::internal_format; \
           break;
 
     GLenum
@@ -74,7 +74,7 @@ namespace ome
 
 #define EXTERNALFORMAT_CASE(maR, maProperty, maType)                    \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          external_format = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::external_format; \
+          external_format = TexelProperties<::ome::xml::model::enums::PixelType::maType>::external_format; \
           break;
 
     GLenum
@@ -94,7 +94,7 @@ namespace ome
 
 #define EXTERNALTYPE_CASE(maR, maProperty, maType)                      \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          external_type = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::external_type; \
+          external_type = TexelProperties<::ome::xml::model::enums::PixelType::maType>::external_type; \
           break;
 
     GLint
@@ -114,7 +114,7 @@ namespace ome
 
 #define FALLBACKTYPE_CASE(maR, maProperty, maType)                      \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          fallback_pixeltype = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::fallback_pixeltype; \
+          fallback_pixeltype = TexelProperties<::ome::xml::model::enums::PixelType::maType>::fallback_pixeltype; \
           break;
 
     ::ome::xml::model::enums::PixelType
@@ -134,7 +134,7 @@ namespace ome
 
 #define CONVERSION_CASE(maR, maProperty, maType)                        \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          conversion_required = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::conversion_required; \
+          conversion_required = TexelProperties<::ome::xml::model::enums::PixelType::maType>::conversion_required; \
           break;
 
     bool
@@ -154,7 +154,7 @@ namespace ome
 
 #define NORMALIZATION_CASE(maR, maProperty, maType)                     \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          normalization_required = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::normalization_required; \
+          normalization_required = TexelProperties<::ome::xml::model::enums::PixelType::maType>::normalization_required; \
           break;
 
     bool
@@ -174,7 +174,7 @@ namespace ome
 
 #define MINIFICATION_CASE(maR, maProperty, maType)                      \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          minification_filter = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::minification_filter; \
+          minification_filter = TexelProperties<::ome::xml::model::enums::PixelType::maType>::minification_filter; \
           break;
 
     GLint
@@ -193,7 +193,7 @@ namespace ome
 
 #define MAGNIFICATION_CASE(maR, maProperty, maType)                     \
         case ::ome::xml::model::enums::PixelType::maType:               \
-          magnification_filter = TexelProperties< ::ome::xml::model::enums::PixelType::maType>::magnification_filter; \
+          magnification_filter = TexelProperties<::ome::xml::model::enums::PixelType::maType>::magnification_filter; \
           break;
 
     GLint

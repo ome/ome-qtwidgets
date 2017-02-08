@@ -39,7 +39,7 @@
 #include <ome/qtwidgets/gl/Grid2D.h>
 #include <ome/qtwidgets/gl/Util.h>
 
-#include <ome/compat/array.h>
+#include <array>
 #include <cmath>
 #include <iostream>
 
@@ -106,7 +106,7 @@ namespace ome
     namespace gl
     {
 
-      Grid2D::Grid2D(ome::compat::shared_ptr<ome::files::FormatReader>  reader,
+      Grid2D::Grid2D(std::shared_ptr<ome::files::FormatReader>  reader,
                      ome::files::dimension_size_type                    series,
                      QObject                                                *parent):
         QObject(parent),
@@ -136,7 +136,7 @@ namespace ome
       Grid2D::setSize(const glm::vec2& xlim,
                       const glm::vec2& ylim)
       {
-        ome::compat::array<glm::vec3, 3> gridcol;
+        std::array<glm::vec3, 3> gridcol;
         gridcol[0] = glm::vec3(0.5f, 0.5f, 0.5f);
         gridcol[1] = glm::vec3(0.7f, 0.7f, 0.7f);
         gridcol[2] = glm::vec3(0.9f, 0.9f, 0.9f);
