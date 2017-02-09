@@ -97,8 +97,8 @@ include(GTest)
 include(Doxygen)
 include(HeaderTest)
 
-find_package(OMECompat 5.2.0 REQUIRED)
-find_package(OMECommon 5.2.0 REQUIRED)
+find_package(OMECompat 5.4.0 REQUIRED)
+find_package(OMECommon 5.4.0 REQUIRED)
 find_package(OMEXML 5.5.0 REQUIRED)
 find_package(OMEFiles 0.3.0 REQUIRED)
 
