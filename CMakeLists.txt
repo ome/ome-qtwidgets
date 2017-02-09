@@ -99,8 +99,8 @@ include(HeaderTest)
 
 find_package(OMECompat 5.2.0 REQUIRED)
 find_package(OMECommon 5.2.0 REQUIRED)
-find_package(OMEXML 5.2.0 REQUIRED)
-find_package(OMEFiles 0.1.1 REQUIRED)
+find_package(OMEXML 5.5.0 REQUIRED)
+find_package(OMEFiles 0.3.0 REQUIRED)
 
 if(MSVC)
   # Debug library suffix.
