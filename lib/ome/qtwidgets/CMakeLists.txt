@@ -116,7 +116,7 @@ target_link_libraries(ome-qtwidgets OME::Files
                       Boost::filesystem
                       ${OPENGL_gl_LIBRARY} ${TIFF_LIBRARIES})
 
-set_target_properties(ome-qtwidgets PROPERTIES VERSION ${OME_VERSION_SHORT})
+set_target_properties(ome-qtwidgets PROPERTIES VERSION ${ome-qtwidgets_VERSION})
 
 add_library(OME::QtWidgets ALIAS ome-qtwidgets)
 
