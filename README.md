@@ -17,10 +17,8 @@ image pixel data and metadata.
 More information
 ----------------
 
-
 For more information, see the [documentation]
 (http://www.openmicroscopy.org/site/support/ome-files-cpp/).
-
 
 Pull request testing
 --------------------
