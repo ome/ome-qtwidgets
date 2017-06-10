@@ -59,7 +59,7 @@ list(APPEND CMAKE_MODULE_PATH
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/BioFormatsCommon.cmake")
 
 set(release-name "ome-qtwidgets")
-set(release-version "5.4.1")
+set(release-version "5.4.2")
 project("${release-name}"
         VERSION "${release-version}"
         LANGUAGES CXX)
