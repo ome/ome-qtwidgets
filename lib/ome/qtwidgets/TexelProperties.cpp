@@ -39,6 +39,9 @@
 
 #include <stdexcept>
 
+// Required with Boost 1.53 after variant include.
+#include <boost/preprocessor.hpp>
+
 namespace ome
 {
   namespace qtwidgets
