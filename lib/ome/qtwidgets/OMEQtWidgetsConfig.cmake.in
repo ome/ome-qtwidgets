@@ -1,11 +1,11 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(OMECommon REQUIRED)
-find_dependency(OMEXML REQUIRED)
-find_dependency(OMEFiles REQUIRED)
-find_dependency(Boost 1.46 REQUIRED COMPONENTS boost iostreams filesystem)
-find_dependency(TIFF REQUIRED)
+find_dependency(OMECommon)
+find_dependency(OMEXML)
+find_dependency(OMEFiles)
+find_dependency(Boost 1.46 COMPONENTS boost iostreams filesystem)
+find_dependency(TIFF)
 
 include(${CMAKE_CURRENT_LIST_DIR}/OMEQtWidgetsInternal.cmake)
 
