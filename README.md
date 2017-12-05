@@ -6,7 +6,7 @@ rendering using OME Files C++.
 Links
 -----
 
-- [Documentation] (http://www.openmicroscopy.org/site/support/ome-files-cpp/)
+- [Documentation](https://docs.openmicroscopy.org/latest/ome-files-cpp/)
 
 Purpose
 -------
@@ -17,8 +17,7 @@ image pixel data and metadata.
 More information
 ----------------
 
-For more information, see the [documentation]
-(http://www.openmicroscopy.org/site/support/ome-files-cpp/).
+For more information, see the [documentation](https://docs.openmicroscopy.org/latest/ome-files-cpp/).
 
 Pull request testing
 --------------------
