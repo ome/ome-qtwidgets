@@ -55,7 +55,7 @@ list(APPEND CMAKE_MODULE_PATH
      "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(release-name "ome-qtwidgets")
-set(release-version "5.4.3")
+set(release-version "5.4.4") # unreleased
 project("${release-name}"
         VERSION "${release-version}"
         LANGUAGES CXX)
