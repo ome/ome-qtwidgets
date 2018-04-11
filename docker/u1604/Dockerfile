@@ -1,6 +1,8 @@
 FROM openmicroscopy/ome-files-cpp-u1604
 MAINTAINER ome-devel@lists.openmicroscopy.org.uk
 
+RUN apt-get update
+
 RUN apt-get -y install \
     qt5-default \
     libqt5opengl5-dev \
