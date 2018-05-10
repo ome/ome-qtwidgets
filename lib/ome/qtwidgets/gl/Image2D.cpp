@@ -162,8 +162,7 @@ namespace
    *
    * If OpenGL limitations require
    */
-  struct GLSetBufferVisitor : public boost::static_visitor<>,
-                              protected QOpenGLFunctions_3_3_Core
+  struct GLSetBufferVisitor : protected QOpenGLFunctions_3_3_Core
   {
     unsigned int textureid;
     TextureProperties tprop;
@@ -439,7 +438,7 @@ namespace ome
             reader->setSeries(oldseries);
 
             GLSetBufferVisitor v(textureid, tprop);
-            boost::apply_visitor(v, buf.vbuffer());
+            ome::compat::visit(v, buf.vbuffer());
           }
         this->plane = plane;
       }
