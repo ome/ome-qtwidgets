@@ -50,7 +50,6 @@ add_executable(view
                ${view_HEADERS_MOC}
                ${view_RESOURCES})
 
-qt5_use_modules(view Core Gui Widgets Svg)
 
 target_include_directories(view PUBLIC
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libexec>
@@ -58,7 +57,7 @@ target_include_directories(view PUBLIC
                            $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>
                            $<BUILD_INTERFACE:${GLM_INCLUDE_DIR}>)
 
-target_link_libraries(view OME::Files OME::QtWidgets)
+target_link_libraries(view OME::Files OME::QtWidgets Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Svg)
 
 install(TARGETS view RUNTIME
         DESTINATION ${OME_QTWIDGETS_INSTALL_PKGLIBEXECDIR}

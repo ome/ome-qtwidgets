@@ -104,7 +104,6 @@ add_library(ome-qtwidgets
             ${QTWIDGETS_GLSL_V330_HEADERS}
             ${ome-qtwidgets_HEADERS_MOC}
             ${ome-qtwidgets_RESOURCES})
-qt5_use_modules(ome-qtwidgets Core Gui Widgets Svg)
 
 target_include_directories(ome-qtwidgets PUBLIC
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
@@ -114,6 +113,7 @@ target_include_directories(ome-qtwidgets PUBLIC
 
 target_link_libraries(ome-qtwidgets OME::Files
                       Boost::filesystem
+                      Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Svg
                       ${OPENGL_gl_LIBRARY} ${TIFF_LIBRARIES})
 
 set_target_properties(ome-qtwidgets PROPERTIES VERSION ${ome-qtwidgets_VERSION})

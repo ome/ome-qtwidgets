@@ -38,7 +38,7 @@ if(BUILD_TESTS)
 
   if(extended-tests)
     header_test_from_file(ome-qtwidgets ome-qtwidgets ome/qtwidgets)
-    qt5_use_modules(ome-qtwidgets-headers Core Gui Widgets Svg)
+    target_link_libraries(ome-qtwidgets-headers Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Svg)
     ome_files_add_test(ome-qtwidgets/headers ome-qtwidgets-headers)
   endif(extended-tests)
 
