@@ -1,9 +1,0 @@
-sudo: required
-
-services: docker
-
-env:
-    - PLATFORM=u1604
-    - PLATFORM=c7
-
-script: echo "Skipping docker build"
