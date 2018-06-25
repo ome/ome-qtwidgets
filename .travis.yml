@@ -1,9 +1,0 @@
-sudo: required
-
-services: docker
-
-env:
-    - PLATFORM=u1604
-    - PLATFORM=c7
-
-script: docker build -t ome-qtwidgets -f docker/${PLATFORM}/Dockerfile .
